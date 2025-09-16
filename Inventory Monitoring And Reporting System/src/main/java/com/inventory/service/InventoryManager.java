@@ -1,5 +1,5 @@
 package com.inventory.service;
-
+import com.inventory.exception.ProductNotFoundException;
 import com.inventory.model.product;
 import com.inventory.DataAccessObject.ProductDAO;
 import java.util.List;
@@ -38,14 +38,12 @@ public class InventoryManager {
             System.out.print("Enter ID to remove: ");
             int id = Integer.parseInt(sc.nextLine());
 
-            boolean removed = dao.removeProduct(id);
-            if (removed) {
-                System.out.println("Product Removed");
-            } else {
-                System.out.println("Product not found");
-            }
+            dao.removeProduct(id); // Will throw exception if not found
+            System.out.println("Product Removed");
         } catch (NumberFormatException e) {
             System.out.println("Invalid input. Please enter a valid ID.");
+        } catch (ProductNotFoundException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -59,26 +57,24 @@ public class InventoryManager {
             System.out.print("Enter new Price: ");
             double price = Double.parseDouble(sc.nextLine());
 
-            boolean updated = dao.updateProduct(id, qty, price); // ✅ Call DAO
-            if (updated) {
-                System.out.println("Product Updated");
-            } else {
-                System.out.println("Product not found");
-            }
+            dao.updateProduct(id, qty, price); // Will throw exception if not found
+            System.out.println("Product Updated");
         } catch (NumberFormatException e) {
             System.out.println("Invalid input. Please enter correct numbers.");
+        } catch (ProductNotFoundException e) {
+            System.out.println(e.getMessage());
         }
     }
 
     public void searchProduct() {
-        System.out.print("Enter Name to search: ");
-        String name = sc.nextLine();
+        try {
+            System.out.print("Enter Name to search: ");
+            String name = sc.nextLine();
 
-        product p = dao.getProductByName(name);
-        if (p != null) {
+            product p = dao.getProductByName(name); // throws exception if not found
             p.display();
-        } else {
-            System.out.println("Product not found");
+        } catch (ProductNotFoundException e) {
+            System.out.println(e.getMessage());
         }
     }
 

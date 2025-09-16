@@ -1,6 +1,8 @@
 package com.inventory.DataAccessObject;
 import com.inventory.model.product;
 import com.inventory.database.dbConnection;
+import com.inventory.exception.ProductNotFoundException;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +36,10 @@ public class ProductDAO {
 
             stmt.setInt(1, id);
             int rows = stmt.executeUpdate();
-            return rows > 0;
+            if (rows == 0) {
+                throw new ProductNotFoundException("Product with ID " + id + " not found.");
+            }
+            return true;
         } catch (SQLException e) {
             System.out.println("Error removing product: " + e.getMessage());
         }
@@ -51,12 +56,16 @@ public class ProductDAO {
             stmt.setDouble(2, price);
             stmt.setInt(3, id);
             int rows = stmt.executeUpdate();
-            return rows > 0;
+            if (rows == 0) {
+                throw new ProductNotFoundException("Product with ID " + id + " not found.");
+            }
+            return true;
         } catch (SQLException e) {
             System.out.println("Error updating product: " + e.getMessage());
         }
         return false;
     }
+
 
     // Search product by name
     public product getProductByName(String name) {
@@ -75,12 +84,15 @@ public class ProductDAO {
                         rs.getDouble("price"),
                         rs.getString("category")
                 );
+            } else {
+                throw new ProductNotFoundException("Product with name '" + name + "' not found.");
             }
         } catch (SQLException e) {
             System.out.println("Error searching product: " + e.getMessage());
         }
         return null;
     }
+
 
     // Fetch all products from DB
     public List<product> getAllProducts() {
