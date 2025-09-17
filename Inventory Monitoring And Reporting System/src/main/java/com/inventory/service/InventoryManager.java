@@ -4,10 +4,13 @@ import com.inventory.model.product;
 import com.inventory.DataAccessObject.ProductDAO;
 import java.util.List;
 import java.util.Scanner;
+import com.inventory.util.CSVHelper;
 
 public class InventoryManager {
     Scanner sc = new Scanner(System.in);
     ProductDAO dao = new ProductDAO();
+    CSVHelper csvDao = new CSVHelper();
+
 
     public void addProduct() {
         try {
@@ -27,7 +30,9 @@ public class InventoryManager {
 
             product p = new product(id, name, qty, price, category);
 
-            dao.addProduct(p);
+            dao.addProduct(p);      // save to DB
+            csvDao.saveProduct(p);  // save to CSV ✅
+
         } catch (NumberFormatException e) {
             System.out.println("Invalid input. Please enter correct numbers.");
         }
@@ -89,5 +94,15 @@ public class InventoryManager {
         }
     }
 
+    public void loadProductsFromCSV() {
+        List<product> products = CSVHelper.loadProducts();
+        if (products.isEmpty()) {
+            System.out.println("No products found.");
+        } else {
+            for (product p : products) {
+                System.out.println(p.getId() + " | " + p.getName() + " | " + p.getPrice() + " | " + p.getQuantity());
+            }
+        }
+    }
 
 }

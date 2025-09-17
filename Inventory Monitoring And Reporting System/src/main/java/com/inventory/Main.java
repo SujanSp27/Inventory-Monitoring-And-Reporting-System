@@ -16,8 +16,9 @@ public class Main {
             System.out.println("3. Update Product");
             System.out.println("4. Search Product");
             System.out.println("5. View All Products");
-            System.out.println("6. Exit");
-            System.out.print("Enter your choice (1-6): ");
+            System.out.println("6. Load Products from CSV");
+            System.out.println("7. Exit");
+            System.out.print("Enter your choice (1-7): ");
 
             try {
                 int choice = Integer.parseInt(sc.nextLine());
@@ -39,14 +40,17 @@ public class Main {
                         manager.displayAll();
                         break;
                     case 6:
+                        manager.loadProductsFromCSV(); // 👈 call CSV load
+                        break;
+                    case 7:
                         System.out.println("Exiting... Thank you!");
                         running = false;
                         break;
                     default:
-                        System.out.println("Invalid choice. Please select between 1 and 6.");
+                        System.out.println("Invalid choice. Please select between 1 and 7.");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Invalid input! Please enter a number between 1 and 6.");
+                System.out.println("Invalid input! Please enter a number between 1 and 7.");
             }
         }
 

@@ -1,6 +1,6 @@
 package com.inventory.DataAccessObject;
 import com.inventory.model.product;
-import com.inventory.database.dbConnection;
+import com.inventory.util.dbConnection;
 import com.inventory.exception.ProductNotFoundException;
 
 import java.sql.*;
