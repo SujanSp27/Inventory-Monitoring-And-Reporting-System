@@ -34,8 +34,40 @@ public class Main {
                         manager.updateProduct();
                         break;
                     case 4:
-                        manager.searchProduct();
+                        boolean searching = true;
+                        while (searching) {
+                            System.out.println("\n===== SEARCH MENU =====");
+                            System.out.println("1. Search by ID");
+                            System.out.println("2. Search by Name");
+                            System.out.println("3. View All Products");
+                            System.out.println("4. Back");
+                            System.out.print("Enter choice: ");
+
+                            try {
+                                int searchChoice = Integer.parseInt(sc.nextLine());
+
+                                switch (searchChoice) {
+                                    case 1:
+                                        manager.searchProductById();
+                                        break;
+                                    case 2:
+                                        manager.searchProductByName();
+                                        break;
+                                    case 3:
+                                        manager.displayAll();
+                                        break;
+                                    case 4:
+                                        searching = false; // exit search menu
+                                        break;
+                                    default:
+                                        System.out.println("Invalid choice! Try again.");
+                                }
+                            } catch (NumberFormatException e) {
+                                System.out.println("Please enter a number!");
+                            }
+                        }
                         break;
+
                     case 5:
                         manager.displayAll();
                         break;

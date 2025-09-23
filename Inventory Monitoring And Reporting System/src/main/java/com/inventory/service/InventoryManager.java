@@ -104,5 +104,30 @@ public class InventoryManager {
             }
         }
     }
+    public void searchProductById() {
+        try {
+            System.out.print("Enter ID to search: ");
+            int id = Integer.parseInt(sc.nextLine());
+
+            product p = dao.getProductById(id); // 👈 new DAO method
+            p.display();
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input! Please enter a valid ID.");
+        } catch (ProductNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void searchProductByName() {
+        try {
+            System.out.print("Enter Name to search: ");
+            String name = sc.nextLine();
+
+            product p = dao.getProductByName(name);
+            p.display();
+        } catch (ProductNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
 }

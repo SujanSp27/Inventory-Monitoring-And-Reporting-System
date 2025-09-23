@@ -92,6 +92,31 @@ public class ProductDAO {
         }
         return null;
     }
+    // Search product by ID
+    public product getProductById(int id) {
+        String sql = "SELECT * FROM products WHERE id = ?";
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return new product(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getInt("quantity"),
+                        rs.getDouble("price"),
+                        rs.getString("category")
+                );
+            } else {
+                throw new ProductNotFoundException("Product with ID " + id + " not found.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error searching product: " + e.getMessage());
+        }
+        return null;
+    }
 
 
     // Fetch all products from DB
