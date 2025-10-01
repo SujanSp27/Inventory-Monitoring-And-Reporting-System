@@ -143,4 +143,35 @@ public class ProductDAO {
         }
         return list;
     }
+    public List<product> getProductsByCategory(String category) {
+        List<product> list = new ArrayList<>();
+        String sql = "SELECT * FROM products WHERE category = ?";
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, category);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                product p = new product(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getInt("quantity"),
+                        rs.getDouble("price"),
+                        rs.getString("category")
+                );
+                list.add(p);
+            }
+
+            if (list.isEmpty()) {
+                throw new ProductNotFoundException("No products found in category: " + category);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error fetching products by category: " + e.getMessage());
+        }
+        return list;
+    }
+
 }

@@ -39,8 +39,9 @@ public class Main {
                             System.out.println("\n===== SEARCH MENU =====");
                             System.out.println("1. Search by ID");
                             System.out.println("2. Search by Name");
-                            System.out.println("3. View All Products");
-                            System.out.println("4. Back");
+                            System.out.println("3. Search by Category");
+                            System.out.println("4. View All Products");
+                            System.out.println("5. Back");
                             System.out.print("Enter choice: ");
 
                             try {
@@ -54,9 +55,12 @@ public class Main {
                                         manager.searchProductByName();
                                         break;
                                     case 3:
-                                        manager.displayAll();
+                                        manager.searchProductByCategory();
                                         break;
                                     case 4:
+                                        manager.displayAll();
+                                        break;
+                                    case 5:
                                         searching = false; // exit search menu
                                         break;
                                     default:

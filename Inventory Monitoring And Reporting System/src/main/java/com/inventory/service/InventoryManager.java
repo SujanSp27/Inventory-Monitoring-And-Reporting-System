@@ -130,4 +130,20 @@ public class InventoryManager {
         }
     }
 
+    public void searchProductByCategory() {
+        try {
+            System.out.print("Enter Category to search: ");
+            String category = sc.nextLine();
+
+            List<product> products = dao.getProductsByCategory(category);
+
+            for (product p : products) {
+                p.display();
+            }
+        } catch (ProductNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+
 }
