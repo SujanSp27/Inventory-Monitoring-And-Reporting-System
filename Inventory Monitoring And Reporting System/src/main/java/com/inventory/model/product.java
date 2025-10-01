@@ -7,6 +7,8 @@ public class product {
     private double price;
     private String category;
 
+        public product() {
+     }
 
     public product(int id, String name, int quantity, double price ,String category) {
         this.id = id;
@@ -68,6 +70,16 @@ public class product {
         System.out.println("Stock Value: " + stockValue());
         System.out.println();
         }
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                ", category='" + category + '\'' +
+                '}';
+    }
 
 
 }
