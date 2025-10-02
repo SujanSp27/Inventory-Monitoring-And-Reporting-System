@@ -17,8 +17,9 @@ public class Main {
             System.out.println("4. Search Product");
             System.out.println("5. View All Products");
             System.out.println("6. Load Products from CSV");
-            System.out.println("7. Exit");
-            System.out.print("Enter your choice (1-7): ");
+            System.out.println("7. View Products with Pagination");
+            System.out.println("8. Exit");
+            System.out.print("Enter your choice (1-8): ");
 
             try {
                 int choice = Integer.parseInt(sc.nextLine());
@@ -79,6 +80,9 @@ public class Main {
                         manager.loadProductsFromCSV(); // 👈 call CSV load
                         break;
                     case 7:
+                        manager.displayPaginated();
+                        break;
+                    case 8:
                         System.out.println("Exiting... Thank you!");
                         running = false;
                         break;

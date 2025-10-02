@@ -144,6 +144,29 @@ public class InventoryManager {
             System.out.println(e.getMessage());
         }
     }
+    public void displayPaginated() {
+        try {
+            System.out.print("Enter page number: ");
+            int page = Integer.parseInt(sc.nextLine());
+
+            System.out.print("Enter page size (items per page): ");
+            int pageSize = Integer.parseInt(sc.nextLine());
+
+            List<product> list = dao.getProductsPaginated(page, pageSize);
+
+            if (list.isEmpty()) {
+                System.out.println("No products found for this page.");
+            } else {
+                System.out.println("\n=== Products (Page " + page + ") ===");
+                for (product p : list) {
+                    p.display();
+                }
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input! Please enter valid numbers.");
+        }
+    }
+
 
 
 }

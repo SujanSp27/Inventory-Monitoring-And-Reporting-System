@@ -173,5 +173,35 @@ public class ProductDAO {
         }
         return list;
     }
+    // Fetch products with pagination
+    public List<product> getProductsPaginated(int page, int pageSize) {
+        List<product> list = new ArrayList<>();
+        String sql = "SELECT * FROM products LIMIT ? OFFSET ?";
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            int offset = (page - 1) * pageSize;
+            stmt.setInt(1, pageSize);
+            stmt.setInt(2, offset);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                product p = new product(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getInt("quantity"),
+                        rs.getDouble("price"),
+                        rs.getString("category")
+                );
+                list.add(p);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching paginated products: " + e.getMessage());
+        }
+        return list;
+    }
+
 
 }
