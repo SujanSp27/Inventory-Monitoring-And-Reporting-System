@@ -202,6 +202,39 @@ public class ProductDAO {
         }
         return list;
     }
+    // In ProductDAO.java
+    public List<product> getProductsByPriceRange(double minPrice, double maxPrice) {
+        List<product> list = new ArrayList<>();
+        String sql = "SELECT * FROM products WHERE price BETWEEN ? AND ?";
+
+        try (Connection conn = dbConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setDouble(1, minPrice);
+            stmt.setDouble(2, maxPrice);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                product p = new product(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getInt("quantity"),
+                        rs.getDouble("price"),
+                        rs.getString("category")
+                );
+                list.add(p);
+            }
+
+            if (list.isEmpty()) {
+                throw new ProductNotFoundException("No products found in price range " + minPrice + " - " + maxPrice);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error fetching products by price range: " + e.getMessage());
+        }
+        return list;
+    }
 
 
 }

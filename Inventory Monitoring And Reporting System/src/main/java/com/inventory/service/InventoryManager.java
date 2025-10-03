@@ -167,6 +167,25 @@ public class InventoryManager {
         }
     }
 
+    public void searchProductByPriceRange() {
+        try {
+            System.out.print("Enter Minimum Price: ");
+            double min = Double.parseDouble(sc.nextLine());
+
+            System.out.print("Enter Maximum Price: ");
+            double max = Double.parseDouble(sc.nextLine());
+
+            List<product> products = dao.getProductsByPriceRange(min, max);
+
+            for (product p : products) {
+                p.display();
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input! Please enter valid numbers.");
+        } catch (ProductNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
 
 }

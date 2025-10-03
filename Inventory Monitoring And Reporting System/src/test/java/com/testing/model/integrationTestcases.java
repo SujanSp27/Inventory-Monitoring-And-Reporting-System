@@ -8,7 +8,7 @@ import java.sql.Connection;
 import java.sql.Statement;
 import java.util.List;
 
-public class integrationtestcases {
+public class integrationTestcases {
     private static ProductDAO dao;
     @BeforeClass
     public static void setupDatabase() throws Exception {
