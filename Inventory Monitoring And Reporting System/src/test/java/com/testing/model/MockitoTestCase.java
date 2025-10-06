@@ -4,16 +4,19 @@ import com.inventory.DataAccessObject.ProductDAO;
 import com.inventory.model.product;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class MockitoTestCase {
 
     private ProductDAO productDAO;
 
     @Before
     public void setup() {
-        // Create mock object for DAO
         productDAO = mock(ProductDAO.class);
     }
 
@@ -21,13 +24,9 @@ public class MockitoTestCase {
     public void testAddProduct() {
         product p = new product(101, "Laptop", 5, 60000, "Electronics");
 
-        // Stub behavior
         doNothing().when(productDAO).addProduct(p);
-
-        // Call method
         productDAO.addProduct(p);
 
-        // Verify interaction
         verify(productDAO, times(1)).addProduct(p);
     }
 
@@ -38,7 +37,7 @@ public class MockitoTestCase {
         boolean result = productDAO.removeProduct(101);
 
         verify(productDAO, times(1)).removeProduct(101);
-        assert(result);
+        assertTrue(result);
     }
 
     @Test
@@ -48,7 +47,7 @@ public class MockitoTestCase {
         boolean updated = productDAO.updateProduct(101, 10, 65000);
 
         verify(productDAO, times(1)).updateProduct(101, 10, 65000);
-        assert(updated);
+        assertTrue(updated);
     }
 
     @Test
@@ -60,7 +59,7 @@ public class MockitoTestCase {
         product p = productDAO.getProductById(101);
 
         verify(productDAO, times(1)).getProductById(101);
-        assert(p.getName().equals("Laptop"));
+        assertEquals("Laptop", p.getName());
     }
 
     @Test
@@ -72,6 +71,6 @@ public class MockitoTestCase {
         product p = productDAO.getProductByName("Mouse");
 
         verify(productDAO, times(1)).getProductByName("Mouse");
-        assert(p.getId() == 102);
+        assertEquals(102, p.getId());
     }
 }

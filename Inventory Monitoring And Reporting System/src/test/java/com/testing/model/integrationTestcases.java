@@ -9,20 +9,20 @@ import java.sql.Statement;
 import java.util.List;
 
 public class integrationTestcases {
+
     private static ProductDAO dao;
+
     @BeforeClass
     public static void setupDatabase() throws Exception {
         dao = new ProductDAO();
         try (Connection conn = dbConnection.getConnection();
              Statement stmt = conn.createStatement()) {
-            // create a fresh test table
             stmt.execute("CREATE TABLE IF NOT EXISTS products (" +
                     "id INT PRIMARY KEY, " +
                     "name VARCHAR(100), " +
                     "category VARCHAR(100), " +
                     "quantity INT, " +
                     "price DOUBLE)");
-            // clear existing data
             stmt.execute("DELETE FROM products");
         }
     }
@@ -59,7 +59,7 @@ public class integrationTestcases {
 
     @Test(expected = ProductNotFoundException.class)
     public void testRemoveProductNotFound() {
-        dao.removeProduct(9999); // should throw exception
+        dao.removeProduct(9999);
     }
 
     @Test

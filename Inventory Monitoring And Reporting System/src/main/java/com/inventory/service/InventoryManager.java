@@ -17,7 +17,7 @@ public class InventoryManager {
             System.out.print("Enter ID: ");
             int id = Integer.parseInt(sc.nextLine());
 
-            System.out.print("Enter Name: ");
+            System.out.print("Enter Product Name: ");
             String name = sc.nextLine();
             System.out.print("Enter Category: ");
             String category = sc.nextLine();
