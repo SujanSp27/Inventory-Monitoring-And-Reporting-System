@@ -7,7 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class dbConnection {
-    private static final String URL = "jdbc:mysql://localhost:3306/inventoryDB";
+    private static final String URL = System.getenv("url");
     private static final String USER = System.getenv("username");
     private static final String PASSWORD = System.getenv("password");
 
