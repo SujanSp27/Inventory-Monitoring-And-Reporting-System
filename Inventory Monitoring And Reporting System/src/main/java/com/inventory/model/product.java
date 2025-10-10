@@ -62,14 +62,18 @@ public class product {
     }
 
     public void display() {
-        System.out.println("Product ID: " + id);
-        System.out.println("Name: " + name);
-        System.out.println("Category: " + category);
-        System.out.println("Quantity: " + quantity);
-        System.out.println("Price: " + price);
-        System.out.println("Stock Value: " + stockValue());
-        System.out.println();
-        }
+        System.out.println("+----+----------------------+----------------------+----------+----------+");
+        System.out.println("| ID | Name                 | Category             | Quantity |  Price   |");
+        System.out.println("+----+----------------------+----------------------+----------+----------+");
+
+        System.out.printf(
+                "| %-2d | %-20s | %-20s | %-8d | %-8.2f |\n",
+                id, name, category, quantity, price
+        );
+
+        System.out.println("+----+----------------------+----------------------+----------+----------+");
+    }
+
     @Override
     public String toString() {
         return "Product{" +

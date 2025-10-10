@@ -1,4 +1,5 @@
 package com.inventory.service;
+
 import com.inventory.exception.ProductNotFoundException;
 import com.inventory.model.product;
 import com.inventory.DataAccessObject.ProductDAO;
@@ -11,181 +12,222 @@ public class InventoryManager {
     ProductDAO dao = new ProductDAO();
     CSVHelper csvDao = new CSVHelper();
 
-
     public void addProduct() {
         try {
-            System.out.print("Enter ID: ");
+            System.out.println("\n📦 === Add New Product ===");
+            System.out.print("🆔 Enter ID: ");
             int id = Integer.parseInt(sc.nextLine());
 
-            System.out.print("Enter Product Name: ");
+            System.out.print("📝 Enter Product Name: ");
             String name = sc.nextLine();
-            System.out.print("Enter Category: ");
+            System.out.print("🏷️  Enter Category: ");
             String category = sc.nextLine();
-
-            System.out.print("Enter Quantity: ");
+            System.out.print("📊 Enter Quantity: ");
             int qty = Integer.parseInt(sc.nextLine());
-
-            System.out.print("Enter Price: ");
+            System.out.print("💰 Enter Price: ");
             double price = Double.parseDouble(sc.nextLine());
 
             product p = new product(id, name, qty, price, category);
+            dao.addProduct(p);
+            csvDao.saveProduct(p);
 
-            dao.addProduct(p);      // save to DB
-            csvDao.saveProduct(p);  // save to CSV ✅
-
+            System.out.println("\n✅ Product added successfully!");
+            System.out.println("--------------------------------------------------");
         } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter correct numbers.");
+            System.out.println("⚠️ Invalid input. Please enter correct numbers.");
         }
     }
 
     public void removeProduct() {
         try {
-            System.out.print("Enter ID to remove: ");
+            System.out.println("\n🗑️ === Remove Product ===");
+            System.out.print("🔢 Enter ID to remove: ");
             int id = Integer.parseInt(sc.nextLine());
 
-            dao.removeProduct(id); // Will throw exception if not found
-            System.out.println("Product Removed");
+            dao.removeProduct(id);
+            System.out.println("\n✅ Product removed successfully!");
+            System.out.println("--------------------------------------------------");
         } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter a valid ID.");
+            System.out.println("⚠️ Invalid input. Please enter a valid ID.");
         } catch (ProductNotFoundException e) {
-            System.out.println(e.getMessage());
+            System.out.println("❌ " + e.getMessage());
         }
     }
 
     public void updateProduct() {
         try {
-            System.out.print("Enter ID to update: ");
+            System.out.println("\n🔄 === Update Product ===");
+            System.out.print("🔢 Enter ID to update: ");
             int id = Integer.parseInt(sc.nextLine());
-
-            System.out.print("Enter new Quantity: ");
+            System.out.print("📦 Enter new Quantity: ");
             int qty = Integer.parseInt(sc.nextLine());
-            System.out.print("Enter new Price: ");
+            System.out.print("💰 Enter new Price: ");
             double price = Double.parseDouble(sc.nextLine());
 
-            dao.updateProduct(id, qty, price); // Will throw exception if not found
-            System.out.println("Product Updated");
+            dao.updateProduct(id, qty, price);
+            System.out.println("\n✅ Product updated successfully!");
+            System.out.println("--------------------------------------------------");
         } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter correct numbers.");
+            System.out.println("⚠️ Invalid input. Please enter correct numbers.");
         } catch (ProductNotFoundException e) {
-            System.out.println(e.getMessage());
+            System.out.println("❌ " + e.getMessage());
         }
     }
 
     public void searchProduct() {
         try {
-            System.out.print("Enter Name to search: ");
+            System.out.println("\n🔍 === Search Product by Name ===");
+            System.out.print("📝 Enter Name: ");
             String name = sc.nextLine();
 
-            product p = dao.getProductByName(name); // throws exception if not found
+            product p = dao.getProductByName(name);
+            System.out.println("\n✅ Product Found:");
             p.display();
         } catch (ProductNotFoundException e) {
-            System.out.println(e.getMessage());
+            System.out.println("❌ " + e.getMessage());
         }
     }
 
     public void displayAll() {
-        List<product> list = dao.getAllProducts();
-        if (list.isEmpty()) {
-            System.out.println("No products available.");
-        } else {
-            for (product p : list) {
-                p.display();
-            }
+        List<product> products = dao.getAllProducts();
+        System.out.println("\n📋 === All Products ===");
+        System.out.println("--------------------------------------------------");
+
+        if (products.isEmpty()) {
+            System.out.println("📭 No products available.");
+            return;
+        }
+
+        System.out.printf("%-5s %-15s %-15s %-10s %-10s%n", "ID", "Name", "Category", "Quantity", "Price");
+        System.out.println("-----------------------------------------------------------");
+
+        for (product p : products) {
+            System.out.printf("%-5d %-15s %-15s %-10d %-10.2f%n",
+                    p.getId(), p.getName(), p.getCategory(), p.getQuantity(), p.getPrice());
         }
     }
 
     public void loadProductsFromCSV() {
+        System.out.println("\n📂 === Load Products from CSV ===");
+        System.out.println("--------------------------------------------------");
+
         List<product> products = CSVHelper.loadProducts();
+
         if (products.isEmpty()) {
-            System.out.println("No products found.");
-        } else {
-            for (product p : products) {
-                System.out.println(p.getId() + " | " + p.getName() + " | " + p.getPrice() + " | " + p.getQuantity());
-            }
+            System.out.println("📭 No products found in CSV.");
+            return;
         }
+
+        // Print table header
+        System.out.printf("%-5s %-15s %-15s %-10s %-10s%n", "ID", "Name", "Category", "Quantity", "Price");
+        System.out.println("-----------------------------------------------------------");
+
+        // Print product details in tabular format
+        for (product p : products) {
+            System.out.printf("%-5d %-15s %-15s %-10d %-10.2f%n",
+                    p.getId(), p.getName(), p.getCategory(), p.getQuantity(), p.getPrice());
+        }
+
+        System.out.println("✅ Products loaded successfully from CSV!");
     }
+
+
     public void searchProductById() {
         try {
-            System.out.print("Enter ID to search: ");
+            System.out.println("\n🔍 === Search Product by ID ===");
+            System.out.print("🔢 Enter ID: ");
             int id = Integer.parseInt(sc.nextLine());
 
-            product p = dao.getProductById(id); // 👈 new DAO method
+            product p = dao.getProductById(id);
+            System.out.println("\n✅ Product Found:");
+            System.out.println("--------------------------------------------------");
             p.display();
         } catch (NumberFormatException e) {
-            System.out.println("Invalid input! Please enter a valid ID.");
+            System.out.println("⚠️ Invalid input! Please enter a valid ID.");
         } catch (ProductNotFoundException e) {
-            System.out.println(e.getMessage());
+            System.out.println("❌ " + e.getMessage());
         }
     }
 
     public void searchProductByName() {
         try {
-            System.out.print("Enter Name to search: ");
+            System.out.println("\n🔍 === Search Product by Name ===");
+            System.out.print("📝 Enter Name: ");
             String name = sc.nextLine();
 
             product p = dao.getProductByName(name);
+            System.out.println("\n✅ Product Found:");
+
             p.display();
         } catch (ProductNotFoundException e) {
-            System.out.println(e.getMessage());
+            System.out.println("❌ " + e.getMessage());
         }
     }
 
     public void searchProductByCategory() {
         try {
-            System.out.print("Enter Category to search: ");
+            System.out.println("\n📦 === Search Products by Category ===");
+            System.out.print("🏷️  Enter Category: ");
             String category = sc.nextLine();
 
             List<product> products = dao.getProductsByCategory(category);
+            System.out.println("\n✅ Products Found:");
+            System.out.println("--------------------------------------------------");
 
             for (product p : products) {
                 p.display();
             }
         } catch (ProductNotFoundException e) {
-            System.out.println(e.getMessage());
+            System.out.println("❌ " + e.getMessage());
         }
     }
+
     public void displayPaginated() {
         try {
-            System.out.print("Enter page number: ");
+            System.out.println("\n📄 === Paginated Product Display ===");
+            System.out.print("📃 Enter Page Number: ");
             int page = Integer.parseInt(sc.nextLine());
-
-            System.out.print("Enter page size (items per page): ");
+            System.out.print("📏 Enter Page Size: ");
             int pageSize = Integer.parseInt(sc.nextLine());
 
             List<product> list = dao.getProductsPaginated(page, pageSize);
 
             if (list.isEmpty()) {
-                System.out.println("No products found for this page.");
+                System.out.println("📭 No products found for this page.");
             } else {
-                System.out.println("\n=== Products (Page " + page + ") ===");
+                System.out.println("\n📄 === Products (Page " + page + ") ===");
+                System.out.println("--------------------------------------------------");
                 for (product p : list) {
                     p.display();
                 }
             }
         } catch (NumberFormatException e) {
-            System.out.println("Invalid input! Please enter valid numbers.");
+            System.out.println("⚠️ Invalid input! Please enter valid numbers.");
         }
     }
 
     public void searchProductByPriceRange() {
         try {
-            System.out.print("Enter Minimum Price: ");
+            System.out.println("\n💸 === Search Products by Price Range ===");
+            System.out.print("🔽 Enter Minimum Price: ");
             double min = Double.parseDouble(sc.nextLine());
-
-            System.out.print("Enter Maximum Price: ");
+            System.out.print("🔼 Enter Maximum Price: ");
             double max = Double.parseDouble(sc.nextLine());
 
             List<product> products = dao.getProductsByPriceRange(min, max);
 
+            System.out.println("\n✅ Products Found:");
+            System.out.printf("%-5s %-15s %-15s %-10s %-10s%n", "ID", "Name", "Category", "Quantity", "Price");
+            System.out.println("-----------------------------------------------------------");
+
             for (product p : products) {
-                p.display();
+                System.out.printf("%-5d %-15s %-15s %-10d %-10.2f%n",
+                        p.getId(), p.getName(), p.getCategory(), p.getQuantity(), p.getPrice());
             }
         } catch (NumberFormatException e) {
-            System.out.println("Invalid input! Please enter valid numbers.");
+            System.out.println("⚠️ Invalid input! Please enter valid numbers.");
         } catch (ProductNotFoundException e) {
-            System.out.println(e.getMessage());
+            System.out.println("❌ " + e.getMessage());
         }
     }
-
-
 }

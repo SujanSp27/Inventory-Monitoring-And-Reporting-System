@@ -2,22 +2,24 @@ package com.testing.model;
 
 import com.inventory.DataAccessObject.ProductDAO;
 import com.inventory.model.product;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class MockitoTestCase {
 
+    @Mock
     private ProductDAO productDAO;
 
-    @Before
+    @BeforeEach
     public void setup() {
-        productDAO = mock(ProductDAO.class);
+        // MockitoExtension automatically initializes mocks, so this can be empty.
     }
 
     @Test
