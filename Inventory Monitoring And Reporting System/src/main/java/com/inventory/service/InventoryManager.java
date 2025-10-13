@@ -12,6 +12,7 @@ public class InventoryManager {
     ProductDAO dao = new ProductDAO();
     CSVHelper csvDao = new CSVHelper();
 
+    // ✅ Add Product
     public void addProduct() {
         try {
             System.out.println("\n📦 === Add New Product ===");
@@ -29,7 +30,6 @@ public class InventoryManager {
 
             product p = new product(id, name, qty, price, category);
             dao.addProduct(p);
-            csvDao.saveProduct(p);
 
             System.out.println("\n✅ Product added successfully!");
             System.out.println("--------------------------------------------------");
@@ -38,6 +38,7 @@ public class InventoryManager {
         }
     }
 
+    // ✅ Remove Product
     public void removeProduct() {
         try {
             System.out.println("\n🗑️ === Remove Product ===");
@@ -54,6 +55,7 @@ public class InventoryManager {
         }
     }
 
+    // ✅ Update Product
     public void updateProduct() {
         try {
             System.out.println("\n🔄 === Update Product ===");
@@ -74,6 +76,7 @@ public class InventoryManager {
         }
     }
 
+    // ✅ Search Product by Name
     public void searchProduct() {
         try {
             System.out.println("\n🔍 === Search Product by Name ===");
@@ -88,6 +91,7 @@ public class InventoryManager {
         }
     }
 
+    // ✅ Display All Products
     public void displayAll() {
         List<product> products = dao.getAllProducts();
         System.out.println("\n📋 === All Products ===");
@@ -107,31 +111,7 @@ public class InventoryManager {
         }
     }
 
-    public void loadProductsFromCSV() {
-        System.out.println("\n📂 === Load Products from CSV ===");
-        System.out.println("--------------------------------------------------");
-
-        List<product> products = CSVHelper.loadProducts();
-
-        if (products.isEmpty()) {
-            System.out.println("📭 No products found in CSV.");
-            return;
-        }
-
-        // Print table header
-        System.out.printf("%-5s %-15s %-15s %-10s %-10s%n", "ID", "Name", "Category", "Quantity", "Price");
-        System.out.println("-----------------------------------------------------------");
-
-        // Print product details in tabular format
-        for (product p : products) {
-            System.out.printf("%-5d %-15s %-15s %-10d %-10.2f%n",
-                    p.getId(), p.getName(), p.getCategory(), p.getQuantity(), p.getPrice());
-        }
-
-        System.out.println("✅ Products loaded successfully from CSV!");
-    }
-
-
+    // ✅ Search Product by ID
     public void searchProductById() {
         try {
             System.out.println("\n🔍 === Search Product by ID ===");
@@ -149,21 +129,7 @@ public class InventoryManager {
         }
     }
 
-    public void searchProductByName() {
-        try {
-            System.out.println("\n🔍 === Search Product by Name ===");
-            System.out.print("📝 Enter Name: ");
-            String name = sc.nextLine();
-
-            product p = dao.getProductByName(name);
-            System.out.println("\n✅ Product Found:");
-
-            p.display();
-        } catch (ProductNotFoundException e) {
-            System.out.println("❌ " + e.getMessage());
-        }
-    }
-
+    // ✅ Search Product by Category
     public void searchProductByCategory() {
         try {
             System.out.println("\n📦 === Search Products by Category ===");
@@ -182,6 +148,7 @@ public class InventoryManager {
         }
     }
 
+    // ✅ Pagination
     public void displayPaginated() {
         try {
             System.out.println("\n📄 === Paginated Product Display ===");
@@ -206,6 +173,7 @@ public class InventoryManager {
         }
     }
 
+    // ✅ Search by Price Range
     public void searchProductByPriceRange() {
         try {
             System.out.println("\n💸 === Search Products by Price Range ===");
@@ -228,6 +196,27 @@ public class InventoryManager {
             System.out.println("⚠️ Invalid input! Please enter valid numbers.");
         } catch (ProductNotFoundException e) {
             System.out.println("❌ " + e.getMessage());
+        }
+    }
+
+    // ✅ Generate Inventory Report
+    public void generateReport() {
+        System.out.println("\n🧾 === Generate Inventory Report ===");
+        List<product> products = dao.getAllProducts();
+
+        if (products.isEmpty()) {
+            System.out.println("⚠️ No products available to generate report!");
+            return;
+        }
+
+        String generatedBy = "Admin"; // optional: you can pass logged-in username here
+        String reportPath = CSVHelper.generateReport(products, generatedBy);
+
+        if (reportPath != null) {
+            System.out.println("📁 Report generated successfully!");
+            System.out.println("📂 Saved at: " + reportPath);
+        } else {
+            System.out.println("❌ Failed to generate report.");
         }
     }
 }
