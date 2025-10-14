@@ -104,7 +104,7 @@ public class Main {
             System.out.println("3️⃣  Update Product");
             System.out.println("4️⃣  View All Products");
             System.out.println("5️⃣  Search Product");
-            System.out.println("6️⃣  generate report");
+            System.out.println("6️⃣  Generate Report and Send via Email");
             System.out.println("7️⃣  Pagination View");
             System.out.println("8️⃣  Search by Price Range");
             System.out.println("9️⃣  Logout");

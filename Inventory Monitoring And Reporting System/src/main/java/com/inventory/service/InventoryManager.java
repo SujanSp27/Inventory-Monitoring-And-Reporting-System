@@ -5,6 +5,7 @@ import com.inventory.model.product;
 import com.inventory.DataAccessObject.ProductDAO;
 import java.util.List;
 import java.util.Scanner;
+import com.inventory.service.UserService;
 import com.inventory.util.CSVHelper;
 
 public class InventoryManager {
@@ -199,24 +200,38 @@ public class InventoryManager {
         }
     }
 
-    // ✅ Generate Inventory Report
+
+// ✅ Generate Inventory Report + Email
     public void generateReport() {
-        System.out.println("\n🧾 === Generate Inventory Report ===");
-        List<product> products = dao.getAllProducts();
+        System.out.println("\n🧾 === Generate & Email Inventory Report ===");
+
+        var products = dao.getAllProducts();
 
         if (products.isEmpty()) {
             System.out.println("⚠️ No products available to generate report!");
             return;
         }
 
-        String generatedBy = "Admin"; // optional: you can pass logged-in username here
-        String reportPath = CSVHelper.generateReport(products, generatedBy);
+        String filePath = CSVHelper.generateReport(products, "Admin");
 
-        if (reportPath != null) {
+        if (filePath != null) {
             System.out.println("📁 Report generated successfully!");
-            System.out.println("📂 Saved at: " + reportPath);
+            System.out.println("📂 Saved at: " + filePath);
+
+            try {
+                EmailService.sendReport(
+                        "sujanpoojari6449@gmail.com",
+                        "Daily Inventory Report",
+                        "Attached is your latest inventory report.",
+                        filePath
+                );
+                System.out.println("📧 Report emailed successfully!");
+            } catch (Exception e) {
+                System.out.println("❌ Failed to send email: " + e.getMessage());
+            }
         } else {
             System.out.println("❌ Failed to generate report.");
         }
     }
+
 }
