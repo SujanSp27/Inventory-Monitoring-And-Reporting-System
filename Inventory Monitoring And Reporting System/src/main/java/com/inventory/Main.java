@@ -3,6 +3,7 @@ package com.inventory;
 import com.inventory.model.User;
 import com.inventory.service.InventoryManager;
 import com.inventory.service.UserService;
+import com.inventory.service.OTPService;
 
 import java.util.Scanner;
 
@@ -45,9 +46,13 @@ public class Main {
         sc.close();
     }
 
-    // ✅ Register New User
+
+    // ✅ Register New User with OTP Verification
     private static void registerUser(Scanner sc, UserService userService) {
         System.out.println("\n📝===== User Registration =====");
+        System.out.print("📧 Enter Email: ");
+        String email = sc.nextLine().trim();
+
         System.out.print("👤 Enter Username: ");
         String username = sc.nextLine();
 
@@ -57,16 +62,30 @@ public class Main {
         System.out.print("⚙️  Enter Role (ADMIN/USER): ");
         String role = sc.nextLine().toUpperCase();
 
-        User user = new User(username, password, role);
+        // Step 1️⃣ - Generate OTP
+        String otp = OTPService.generateOTP(email);
+        OTPService.sendOTPEmail(email, otp);
 
+        System.out.print("\n✉️  Enter the OTP sent to your email: ");
+        String enteredOTP = sc.nextLine().trim();
+
+        // Step 2️⃣ - Verify OTP
+        if (!OTPService.verifyOTP(email, enteredOTP)) {
+            System.out.println("❌ Invalid or expired OTP! Registration failed.");
+            return;
+        }
+
+        // Step 3️⃣ - Register user
+        User user = new User(username, password, role);
         boolean success = userService.register(user);
 
         if (success) {
-            System.out.println("You can now login.");
+            System.out.println("🎉 Registration successful! You can now login.");
         } else {
-            System.out.println("Try again!");
+            System.out.println("⚠️ Registration failed! Try again.");
         }
     }
+
 
     // ✅ Login User
     private static boolean loginUser(Scanner sc, UserService userService, InventoryManager manager) {

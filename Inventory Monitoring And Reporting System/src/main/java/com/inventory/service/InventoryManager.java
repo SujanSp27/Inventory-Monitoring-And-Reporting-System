@@ -201,37 +201,49 @@ public class InventoryManager {
     }
 
 
-// ✅ Generate Inventory Report + Email
-    public void generateReport() {
-        System.out.println("\n🧾 === Generate & Email Inventory Report ===");
 
-        var products = dao.getAllProducts();
+public void generateReport() {
+    System.out.println("\n🧾 === Generate & Email Inventory Report ===");
 
-        if (products.isEmpty()) {
-            System.out.println("⚠️ No products available to generate report!");
-            return;
-        }
+    var products = dao.getAllProducts();
 
-        String filePath = CSVHelper.generateReport(products, "Admin");
-
-        if (filePath != null) {
-            System.out.println("📁 Report generated successfully!");
-            System.out.println("📂 Saved at: " + filePath);
-
-            try {
-                EmailService.sendReport(
-                        "sujanpoojari6449@gmail.com",
-                        "Daily Inventory Report",
-                        "Attached is your latest inventory report.",
-                        filePath
-                );
-                System.out.println("📧 Report emailed successfully!");
-            } catch (Exception e) {
-                System.out.println("❌ Failed to send email: " + e.getMessage());
-            }
-        } else {
-            System.out.println("❌ Failed to generate report.");
-        }
+    if (products.isEmpty()) {
+        System.out.println("⚠️ No products available to generate report!");
+        return;
     }
+
+    // Step 1️⃣ - Ask admin for email
+    System.out.print("📧 Enter admin email to send report: ");
+    String adminEmail = sc.nextLine().trim();
+
+    if (adminEmail.isEmpty()) {
+        System.out.println("⚠️ Email cannot be empty! Report not sent.");
+        return;
+    }
+
+    // Step 2️⃣ - Generate report
+    String filePath = CSVHelper.generateReport(products, "Admin");
+
+    if (filePath != null) {
+        System.out.println("📁 Report generated successfully!");
+        System.out.println("📂 Saved at: " + filePath);
+
+        try {
+            // Step 3️⃣ - Send email dynamically
+            EmailService.sendReport(
+                    adminEmail,
+                    "📦 Daily Inventory Report",
+                    "Hello Admin,\n\nPlease find the attached latest inventory report.\n\nRegards,\nInventory System",
+                    filePath
+            );
+            System.out.println("✅ Report emailed successfully to " + adminEmail + "!");
+        } catch (Exception e) {
+            System.out.println("❌ Failed to send email: " + e.getMessage());
+        }
+    } else {
+        System.out.println("❌ Failed to generate report.");
+    }
+}
+
 
 }
