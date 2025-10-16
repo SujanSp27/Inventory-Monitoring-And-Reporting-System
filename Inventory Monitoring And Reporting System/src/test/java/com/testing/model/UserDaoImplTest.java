@@ -55,7 +55,7 @@ public class UserDaoImplTest {
     // ✅ Test: addUser() - success
     @Test
     void testAddUserSuccess() throws Exception {
-        User user = new User(1, "ajit", "1234", "ADMIN");
+        User user = new User(1, "ajit", "1234", "ajit@example.com", "ADMIN", false);
 
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
 
@@ -63,14 +63,16 @@ public class UserDaoImplTest {
 
         verify(mockPreparedStatement).setString(1, "ajit");
         verify(mockPreparedStatement).setString(2, "1234");
-        verify(mockPreparedStatement).setString(3, "ADMIN");
+        verify(mockPreparedStatement).setString(3, "ajit@example.com");
+        verify(mockPreparedStatement).setString(4, "ADMIN");
+        verify(mockPreparedStatement).setBoolean(5, false);
         verify(mockPreparedStatement).executeUpdate();
     }
 
-    // ✅ Test: addUser() - duplicate username
+    // ✅ Test: addUser() - duplicate username/email
     @Test
     void testAddUserDuplicateUsername() throws Exception {
-        User user = new User(2, "existingUser", "abcd", "USER");
+        User user = new User(2, "existingUser", "abcd", "exist@example.com", "USER", false);
 
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         doThrow(new SQLIntegrityConstraintViolationException("Duplicate username"))
@@ -90,13 +92,17 @@ public class UserDaoImplTest {
         when(mockResultSet.getInt("id")).thenReturn(1);
         when(mockResultSet.getString("username")).thenReturn("ajit");
         when(mockResultSet.getString("password")).thenReturn("1234");
+        when(mockResultSet.getString("email")).thenReturn("ajit@example.com");
         when(mockResultSet.getString("role")).thenReturn("ADMIN");
+        when(mockResultSet.getBoolean("is_verified")).thenReturn(true);
 
         User result = userDAO.getUserByUsername("ajit");
 
         assertNotNull(result);
         assertEquals("ajit", result.getUsername());
         assertEquals("ADMIN", result.getRole());
+        assertEquals("ajit@example.com", result.getEmail());
+        assertTrue(result.isVerified());
     }
 
     // ✅ Test: getUserByUsername() - not found

@@ -21,7 +21,7 @@ public class ProductDAO {
             stmt.setDouble(5, product.getPrice());
 
             stmt.executeUpdate();
-            System.out.println(" Product added successfully!");
+
         } catch (SQLException e) {
             System.out.println("Error adding product: " + e.getMessage());
         }

@@ -5,7 +5,6 @@ import jakarta.mail.internet.*;
 import java.io.File;
 import java.util.Properties;
 
-
 public class EmailService {
 
     public static void sendReport(String toEmail, String subject, String body, String attachmentPath) {
@@ -16,7 +15,17 @@ public class EmailService {
             throw new RuntimeException("❌ Email credentials not set in environment variables!");
         }
 
-        // SMTP configuration
+
+        if (toEmail == null || toEmail.trim().isEmpty()) {
+            throw new IllegalArgumentException("❌ Recipient email is null or empty!");
+        }
+
+        toEmail = toEmail.trim();
+        if (!toEmail.contains("@") || toEmail.endsWith("@")) {
+            throw new IllegalArgumentException("❌ Invalid recipient email format: " + toEmail);
+        }
+
+
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
@@ -33,26 +42,24 @@ public class EmailService {
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(fromEmail));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail, false));
             message.setSubject(subject);
 
-            // Email body
             MimeBodyPart textPart = new MimeBodyPart();
             textPart.setText(body);
 
-            // Attachment part
             MimeBodyPart attachmentPart = new MimeBodyPart();
-            attachmentPart.attachFile(new File(attachmentPath));
+            File file = new File(attachmentPath);
+            if (file.exists()) attachmentPart.attachFile(file);
 
             Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(textPart);
             multipart.addBodyPart(attachmentPart);
 
             message.setContent(multipart);
-
             Transport.send(message);
-            System.out.println("✅ Report sent successfully to " + toEmail);
 
+            System.out.println("✅ Report sent successfully to: " + toEmail);
         } catch (Exception e) {
             System.out.println("❌ Error sending email: " + e.getMessage());
         }

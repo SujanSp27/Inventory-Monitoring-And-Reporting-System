@@ -4,7 +4,6 @@ import com.inventory.model.User;
 import com.inventory.service.InventoryManager;
 import com.inventory.service.UserService;
 import com.inventory.service.OTPService;
-
 import java.util.Scanner;
 
 public class Main {
@@ -20,114 +19,122 @@ public class Main {
 
         boolean running = true;
         while (running) {
-            System.out.println("\n📋  Main Menu");
+            System.out.println("\n📋 Main Menu");
             System.out.println("1️⃣  Login");
             System.out.println("2️⃣  Register");
-            System.out.println("3️⃣  Exit");
+            System.out.println("3️⃣  Verify Email");
+            System.out.println("4️⃣  Exit");
             System.out.print("👉 Enter your choice: ");
-
             String choice = sc.nextLine();
 
             switch (choice) {
-                case "1" -> {
-                    if (loginUser(sc, userService, manager)) {
-                        running = false;
-                    }
-                }
+                case "1" -> loginUser(sc, userService, manager);
                 case "2" -> registerUser(sc, userService);
-                case "3" -> {
+                case "3" -> verifyEmail(sc, userService);
+                case "4" -> {
                     System.out.println("\n👋 Thank you for using Inventory System! Goodbye!");
                     running = false;
                 }
                 default -> System.out.println("⚠️ Invalid choice! Please try again.");
             }
         }
-
         sc.close();
     }
 
-
-    // ✅ Register New User with OTP Verification
     private static void registerUser(Scanner sc, UserService userService) {
         System.out.println("\n📝===== User Registration =====");
         System.out.print("📧 Enter Email: ");
         String email = sc.nextLine().trim();
-
         System.out.print("👤 Enter Username: ");
         String username = sc.nextLine();
-
         System.out.print("🔑 Enter Password: ");
         String password = sc.nextLine();
-
         System.out.print("⚙️  Enter Role (ADMIN/USER): ");
         String role = sc.nextLine().toUpperCase();
 
-        // Step 1️⃣ - Generate OTP
         String otp = OTPService.generateOTP(email);
         OTPService.sendOTPEmail(email, otp);
 
         System.out.print("\n✉️  Enter the OTP sent to your email: ");
         String enteredOTP = sc.nextLine().trim();
 
-        // Step 2️⃣ - Verify OTP
         if (!OTPService.verifyOTP(email, enteredOTP)) {
             System.out.println("❌ Invalid or expired OTP! Registration failed.");
             return;
         }
 
-        // Step 3️⃣ - Register user
-        User user = new User(username, password, role);
-        boolean success = userService.register(user);
-
-        if (success) {
-            System.out.println("🎉 Registration successful! You can now login.");
+        User user = new User(username, password, role, email, false);
+        if (userService.register(user)) {
+            System.out.println("🎉 Registration successful!");
         } else {
             System.out.println("⚠️ Registration failed! Try again.");
         }
     }
 
+    private static void verifyEmail(Scanner sc, UserService userService) {
+        System.out.println("\n📧===== Email Verification =====");
+        System.out.print("Enter your email: ");
+        String email = sc.nextLine().trim();
 
-    // ✅ Login User
-    private static boolean loginUser(Scanner sc, UserService userService, InventoryManager manager) {
+        if (!userService.existsByEmail(email)) {
+            System.out.println("❌ No user found with this email.");
+            return;
+        }
+
+        String otp = OTPService.generateOTP(email);
+        OTPService.sendOTPEmail(email, otp);
+
+        System.out.print("Enter OTP (or type 'exit' to cancel): ");
+        String enteredOtp = sc.nextLine().trim();
+
+        if (enteredOtp.equalsIgnoreCase("exit")) {
+            System.out.println("🚪 Returning to main menu...");
+            return;
+        }
+
+        if (OTPService.verifyOTP(email, enteredOtp)) {
+            userService.verifyUser(email);
+
+        } else {
+            System.out.println("❌ Invalid OTP! Verification failed.");
+        }
+    }
+
+    private static void loginUser(Scanner sc, UserService userService, InventoryManager manager) {
         System.out.println("\n🔐===== User Login =====");
         System.out.print("👤 Enter Username: ");
         String username = sc.nextLine();
-
         System.out.print("🔑 Enter Password: ");
         String password = sc.nextLine();
 
         if (!userService.login(username, password)) {
             System.out.println("🚫 Invalid credentials! Try again.");
-            return false;
+            return;
         }
 
         String role = userService.getRole(username);
         System.out.println("\n🎉 Welcome, " + username + "! You are logged in as: " + role);
 
         if (role.equalsIgnoreCase("ADMIN")) {
-            adminMenu(manager, sc);
+            adminMenu(manager, sc, username);
         } else {
             userMenu(manager, sc);
         }
-        return true;
     }
 
-    // ✅ Admin Menu
-    private static void adminMenu(InventoryManager manager, Scanner sc) {
+    private static void adminMenu(InventoryManager manager, Scanner sc, String username) {
         boolean running = true;
         while (running) {
             System.out.println("\n🧑‍💼===== ADMIN MENU =====");
-            System.out.println("-------------------------------------------------");
-            System.out.println("1️⃣  Add Product");
-            System.out.println("2️⃣  Remove Product");
-            System.out.println("3️⃣  Update Product");
-            System.out.println("4️⃣  View All Products");
-            System.out.println("5️⃣  Search Product");
-            System.out.println("6️⃣  Generate Report and Send via Email");
-            System.out.println("7️⃣  Pagination View");
-            System.out.println("8️⃣  Search by Price Range");
-            System.out.println("9️⃣  Logout");
-            System.out.println("-------------------------------------------------");
+            System.out.println("1️⃣ Add Product");
+            System.out.println("2️⃣ Remove Product");
+            System.out.println("3️⃣ Update Product");
+            System.out.println("4️⃣ View All Products");
+            System.out.println("5️⃣ Search Product");
+            System.out.println("6️⃣ Generate Report");
+            System.out.println("7️⃣ Pagination View");
+            System.out.println("8️⃣ Search by Price Range");
+            System.out.println("9️⃣ Logout");
             System.out.print("👉 Enter your choice: ");
 
             try {
@@ -153,18 +160,15 @@ public class Main {
         }
     }
 
-    // ✅ User Menu
     private static void userMenu(InventoryManager manager, Scanner sc) {
         boolean running = true;
         while (running) {
             System.out.println("\n🙍‍♂️===== USER MENU =====");
-            System.out.println("-------------------------------------------------");
-            System.out.println("1️⃣  View All Products");
-            System.out.println("2️⃣  Search Product");
-            System.out.println("3️⃣  View Products with Pagination");
-            System.out.println("4️⃣  Search by Price Range");
-            System.out.println("5️⃣  Logout");
-            System.out.println("-------------------------------------------------");
+            System.out.println("1️⃣ View All Products");
+            System.out.println("2️⃣ Search Product");
+            System.out.println("3️⃣ View Products with Pagination");
+            System.out.println("4️⃣ Search by Price Range");
+            System.out.println("5️⃣ Logout");
             System.out.print("👉 Enter your choice: ");
 
             try {
