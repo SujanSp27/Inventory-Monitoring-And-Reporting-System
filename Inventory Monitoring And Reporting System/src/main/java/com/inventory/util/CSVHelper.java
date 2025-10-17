@@ -46,8 +46,6 @@ public class CSVHelper {
 
                 writer.println("--------------------------------------------");
                 writer.println("Total Products: " + (products != null ? products.size() : 0));
-
-                System.out.println("✅ Report saved successfully: " + fileName);
                 return fileName;
 
             } catch (IOException e) {

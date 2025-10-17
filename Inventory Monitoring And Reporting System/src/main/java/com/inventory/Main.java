@@ -4,6 +4,7 @@ import com.inventory.model.User;
 import com.inventory.service.InventoryManager;
 import com.inventory.service.UserService;
 import com.inventory.service.OTPService;
+
 import java.util.Scanner;
 
 public class Main {
@@ -94,7 +95,6 @@ public class Main {
 
         if (OTPService.verifyOTP(email, enteredOtp)) {
             userService.verifyUser(email);
-
         } else {
             System.out.println("❌ Invalid OTP! Verification failed.");
         }
@@ -115,14 +115,19 @@ public class Main {
         String role = userService.getRole(username);
         System.out.println("\n🎉 Welcome, " + username + "! You are logged in as: " + role);
 
+        // ✅ Fetch verified email of the logged-in user from DB
+        String loggedInEmail = userService.getEmailByUsername(username);
+        System.out.println("📧 Verified email found: " + loggedInEmail);
+
         if (role.equalsIgnoreCase("ADMIN")) {
-            adminMenu(manager, sc, username);
+            adminMenu(manager, sc, loggedInEmail); // ✅ Pass email instead of username
         } else {
             userMenu(manager, sc);
         }
     }
 
-    private static void adminMenu(InventoryManager manager, Scanner sc, String username) {
+    // ✅ Admin Menu - uses loggedInEmail for report sending
+    private static void adminMenu(InventoryManager manager, Scanner sc, String loggedInEmail) {
         boolean running = true;
         while (running) {
             System.out.println("\n🧑‍💼===== ADMIN MENU =====");
@@ -145,7 +150,7 @@ public class Main {
                     case 3 -> manager.updateProduct();
                     case 4 -> manager.displayAll();
                     case 5 -> manager.searchProduct();
-                    case 6 -> manager.generateReport();
+                    case 6 -> manager.generateReport(loggedInEmail); // ✅ Email sent to this admin
                     case 7 -> manager.displayPaginated();
                     case 8 -> manager.searchProductByPriceRange();
                     case 9 -> {

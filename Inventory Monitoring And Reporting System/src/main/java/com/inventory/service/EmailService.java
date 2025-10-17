@@ -59,7 +59,7 @@ public class EmailService {
             message.setContent(multipart);
             Transport.send(message);
 
-            System.out.println("✅ Report sent successfully to: " + toEmail);
+
         } catch (Exception e) {
             System.out.println("❌ Error sending email: " + e.getMessage());
         }

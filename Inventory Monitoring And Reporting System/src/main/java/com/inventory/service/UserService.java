@@ -154,4 +154,39 @@ public class UserService {
         }
         return null;
     }
+
+    public String getAdminEmail() {
+        try {
+            String sql = "SELECT email FROM users WHERE role = 'ADMIN' AND is_verified = TRUE LIMIT 1";
+            var conn = com.inventory.util.dbConnection.getConnection();
+            try (var ps = conn.prepareStatement(sql)) {
+                var rs = ps.executeQuery();
+                if (rs.next()) {
+                    return rs.getString("email");
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("❌ Error fetching admin email: " + e.getMessage());
+        }
+        return null;
+    }
+
+
+    public String getEmailByUsername(String username) {
+        String email = null;
+        String sql = "SELECT email FROM users WHERE username = ? AND is_verified = 1";
+        try (Connection conn = com.inventory.util.dbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username);
+            var rs = ps.executeQuery();
+            if (rs.next()) {
+                email = rs.getString("email");
+            }
+        } catch (Exception e) {
+            System.out.println("❌ Error fetching email: " + e.getMessage());
+        }
+        return email;
+    }
+
+
 }
