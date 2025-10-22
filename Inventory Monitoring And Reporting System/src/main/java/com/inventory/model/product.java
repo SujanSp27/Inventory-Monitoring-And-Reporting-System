@@ -6,8 +6,10 @@ public class product {
     private int quantity;
     private double price;
     private String category;
+    private int threshold;
 
-        public product() {
+
+    public product() {
      }
 
     public product(int id, String name, int quantity, double price ,String category) {

@@ -4,8 +4,12 @@ import com.inventory.model.User;
 import com.inventory.service.InventoryManager;
 import com.inventory.service.UserService;
 import com.inventory.service.OTPService;
+import com.inventory.service.StockAlertService;
 
 import java.util.Scanner;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
 
@@ -120,7 +124,16 @@ public class Main {
         System.out.println("📧 Verified email found: " + loggedInEmail);
 
         if (role.equalsIgnoreCase("ADMIN")) {
-            adminMenu(manager, sc, loggedInEmail); // ✅ Pass email instead of username
+            // ✅ Start Stock Alert Scheduler for Admin
+            new Thread(() -> {
+                StockAlertService alertService = new StockAlertService();
+                ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+                scheduler.scheduleAtFixedRate(alertService::checkStockAlerts, 0, 1, TimeUnit.MINUTES);
+                System.out.println("🕒 Stock alert scheduler started...");
+            }).start();
+
+            // ✅ Then open admin menu
+            adminMenu(manager, sc, loggedInEmail);
         } else {
             userMenu(manager, sc);
         }
