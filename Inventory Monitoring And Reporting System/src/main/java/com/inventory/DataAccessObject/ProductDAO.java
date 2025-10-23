@@ -1,4 +1,5 @@
 package com.inventory.DataAccessObject;
+
 import com.inventory.model.product;
 import com.inventory.util.dbConnection;
 import com.inventory.exception.ProductNotFoundException;
@@ -8,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDAO {
-    // Insert Product into DB
+
+    // ✅ Add Product
     public void addProduct(product product) {
         String sql = "INSERT INTO products (id, name, category, quantity, price) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = dbConnection.getConnection();
@@ -20,15 +22,17 @@ public class ProductDAO {
             stmt.setInt(4, product.getQuantity());
             stmt.setDouble(5, product.getPrice());
 
-            stmt.executeUpdate();
+            int rows = stmt.executeUpdate();
+            if (rows > 0) {
+                System.out.println("✅ Product added successfully: " + product.getName());
+            }
 
         } catch (SQLException e) {
-            System.out.println("Error adding product: " + e.getMessage());
+            System.out.println("❌ Error adding product: " + e.getMessage());
         }
     }
 
-
-    // Remove product by ID
+    // ✅ Remove Product by ID
     public boolean removeProduct(int id) {
         String sql = "DELETE FROM products WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -36,17 +40,20 @@ public class ProductDAO {
 
             stmt.setInt(1, id);
             int rows = stmt.executeUpdate();
+
             if (rows == 0) {
                 throw new ProductNotFoundException("Product with ID " + id + " not found.");
             }
+            System.out.println("✅ Product with ID " + id + " removed.");
             return true;
+
         } catch (SQLException e) {
-            System.out.println("Error removing product: " + e.getMessage());
+            System.out.println("❌ Error removing product: " + e.getMessage());
         }
         return false;
     }
 
-    // Update product (quantity + price)
+    // ✅ Update Product (Quantity & Price)
     public boolean updateProduct(int id, int qty, double price) {
         String sql = "UPDATE products SET quantity = ?, price = ? WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -56,18 +63,21 @@ public class ProductDAO {
             stmt.setDouble(2, price);
             stmt.setInt(3, id);
             int rows = stmt.executeUpdate();
+
             if (rows == 0) {
                 throw new ProductNotFoundException("Product with ID " + id + " not found.");
             }
+
+            System.out.println("✅ Product with ID " + id + " updated.");
             return true;
+
         } catch (SQLException e) {
-            System.out.println("Error updating product: " + e.getMessage());
+            System.out.println("❌ Error updating product: " + e.getMessage());
         }
         return false;
     }
 
-
-    // Search product by name
+    // ✅ Get Product by Name
     public product getProductByName(String name) {
         String sql = "SELECT * FROM products WHERE name = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -87,12 +97,14 @@ public class ProductDAO {
             } else {
                 throw new ProductNotFoundException("Product with name '" + name + "' not found.");
             }
+
         } catch (SQLException e) {
-            System.out.println("Error searching product: " + e.getMessage());
+            System.out.println("❌ Error fetching product by name: " + e.getMessage());
         }
         return null;
     }
-    // Search product by ID
+
+    // ✅ Get Product by ID
     public product getProductById(int id) {
         String sql = "SELECT * FROM products WHERE id = ?";
         try (Connection conn = dbConnection.getConnection();
@@ -112,14 +124,14 @@ public class ProductDAO {
             } else {
                 throw new ProductNotFoundException("Product with ID " + id + " not found.");
             }
+
         } catch (SQLException e) {
-            System.out.println("Error searching product: " + e.getMessage());
+            System.out.println("❌ Error fetching product by ID: " + e.getMessage());
         }
         return null;
     }
 
-
-    // Fetch all products from DB
+    // ✅ Fetch All Products
     public List<product> getAllProducts() {
         List<product> list = new ArrayList<>();
         String sql = "SELECT * FROM products";
@@ -129,20 +141,22 @@ public class ProductDAO {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                product p = new product(
+                list.add(new product(
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getInt("quantity"),
                         rs.getDouble("price"),
                         rs.getString("category")
-                );
-                list.add(p);
+                ));
             }
+
         } catch (SQLException e) {
-            System.out.println("Error fetching products: " + e.getMessage());
+            System.out.println("❌ Error fetching all products: " + e.getMessage());
         }
         return list;
     }
+
+    // ✅ Get Products by Category
     public List<product> getProductsByCategory(String category) {
         List<product> list = new ArrayList<>();
         String sql = "SELECT * FROM products WHERE category = ?";
@@ -154,14 +168,13 @@ public class ProductDAO {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                product p = new product(
+                list.add(new product(
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getInt("quantity"),
                         rs.getDouble("price"),
                         rs.getString("category")
-                );
-                list.add(p);
+                ));
             }
 
             if (list.isEmpty()) {
@@ -169,11 +182,12 @@ public class ProductDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("Error fetching products by category: " + e.getMessage());
+            System.out.println("❌ Error fetching products by category: " + e.getMessage());
         }
         return list;
     }
-    // Fetch products with pagination
+
+    // ✅ Fetch Products with Pagination
     public List<product> getProductsPaginated(int page, int pageSize) {
         List<product> list = new ArrayList<>();
         String sql = "SELECT * FROM products LIMIT ? OFFSET ?";
@@ -186,23 +200,23 @@ public class ProductDAO {
             stmt.setInt(2, offset);
 
             ResultSet rs = stmt.executeQuery();
-
             while (rs.next()) {
-                product p = new product(
+                list.add(new product(
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getInt("quantity"),
                         rs.getDouble("price"),
                         rs.getString("category")
-                );
-                list.add(p);
+                ));
             }
+
         } catch (SQLException e) {
-            System.out.println("Error fetching paginated products: " + e.getMessage());
+            System.out.println("❌ Error fetching paginated products: " + e.getMessage());
         }
         return list;
     }
-    // In ProductDAO.java
+
+    // ✅ Get Products by Price Range
     public List<product> getProductsByPriceRange(double minPrice, double maxPrice) {
         List<product> list = new ArrayList<>();
         String sql = "SELECT * FROM products WHERE price BETWEEN ? AND ?";
@@ -214,16 +228,14 @@ public class ProductDAO {
             stmt.setDouble(2, maxPrice);
 
             ResultSet rs = stmt.executeQuery();
-
             while (rs.next()) {
-                product p = new product(
+                list.add(new product(
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getInt("quantity"),
                         rs.getDouble("price"),
                         rs.getString("category")
-                );
-                list.add(p);
+                ));
             }
 
             if (list.isEmpty()) {
@@ -231,10 +243,8 @@ public class ProductDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("Error fetching products by price range: " + e.getMessage());
+            System.out.println("❌ Error fetching products by price range: " + e.getMessage());
         }
         return list;
     }
-
-
 }

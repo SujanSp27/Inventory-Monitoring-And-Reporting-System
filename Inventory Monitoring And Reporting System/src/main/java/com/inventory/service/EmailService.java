@@ -7,24 +7,30 @@ import java.util.Properties;
 
 public class EmailService {
 
-    // ✅ Method 1: Send report with file attachment (already implemented by you)
+    // ✅ Method 1: Send report with optional file attachment (used in StockAlertService)
     public static void sendReport(String toEmail, String subject, String body, String attachmentPath) {
         final String fromEmail = System.getenv("MAIL_USER");
         final String password = System.getenv("MAIL_PASS");
 
+        // ✅ Step 1: Validate credentials
         if (fromEmail == null || password == null) {
-            throw new RuntimeException("❌ Email credentials not set in environment variables!");
+            System.out.println("❌ Email credentials (MAIL_USER, MAIL_PASS) are not set in environment variables!");
+            return;
         }
 
+        // ✅ Step 2: Validate recipient email
         if (toEmail == null || toEmail.trim().isEmpty()) {
-            throw new IllegalArgumentException("❌ Recipient email is null or empty!");
+            System.out.println("❌ Recipient email is null or empty!");
+            return;
         }
-
         toEmail = toEmail.trim();
+
         if (!toEmail.contains("@") || toEmail.endsWith("@")) {
-            throw new IllegalArgumentException("❌ Invalid recipient email format: " + toEmail);
+            System.out.println("❌ Invalid recipient email format: " + toEmail);
+            return;
         }
 
+        // ✅ Step 3: SMTP configuration
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
@@ -39,39 +45,56 @@ public class EmailService {
         });
 
         try {
+            // ✅ Step 4: Create message
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(fromEmail));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail, false));
             message.setSubject(subject);
 
+            // ✅ Step 5: Message body
             MimeBodyPart textPart = new MimeBodyPart();
             textPart.setText(body);
 
-            MimeBodyPart attachmentPart = new MimeBodyPart();
-            File file = new File(attachmentPath);
-            if (file.exists()) attachmentPart.attachFile(file);
-
             Multipart multipart = new MimeMultipart();
             multipart.addBodyPart(textPart);
-            multipart.addBodyPart(attachmentPart);
+
+            // ✅ Step 6: Optional file attachment (handle null safely)
+            if (attachmentPath != null && !attachmentPath.trim().isEmpty()) {
+                File file = new File(attachmentPath);
+                if (file.exists() && file.isFile()) {
+                    MimeBodyPart attachmentPart = new MimeBodyPart();
+                    attachmentPart.attachFile(file);
+                    multipart.addBodyPart(attachmentPart);
+                } else {
+                    System.out.println("⚠️ Attachment not found or invalid: " + attachmentPath);
+                }
+            }
 
             message.setContent(multipart);
-            Transport.send(message);
 
-            System.out.println("📨 Report email sent successfully to " + toEmail);
+            // ✅ Step 7: Send email
+            Transport.send(message);
+            System.out.println("\n📨 Report email sent successfully to " + toEmail + "\n");
+
 
         } catch (Exception e) {
             System.out.println("❌ Error sending report email: " + e.getMessage());
         }
     }
 
-    // ✅ Method 2: Send simple text email (used by StockAlertService)
+    // ✅ Method 2: Send simple text email (without attachments)
     public void sendEmail(String toEmail, String subject, String body) {
         final String fromEmail = System.getenv("MAIL_USER");
         final String password = System.getenv("MAIL_PASS");
 
         if (fromEmail == null || password == null) {
-            throw new RuntimeException("❌ Email credentials not set in environment variables!");
+            System.out.println("❌ Email credentials (MAIL_USER, MAIL_PASS) are not set in environment variables!");
+            return;
+        }
+
+        if (toEmail == null || toEmail.trim().isEmpty()) {
+            System.out.println("❌ Recipient email is null or empty!");
+            return;
         }
 
         Properties props = new Properties();

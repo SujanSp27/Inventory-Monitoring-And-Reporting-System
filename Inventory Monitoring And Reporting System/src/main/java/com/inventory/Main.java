@@ -119,28 +119,27 @@ public class Main {
         String role = userService.getRole(username);
         System.out.println("\n🎉 Welcome, " + username + "! You are logged in as: " + role);
 
-        // ✅ Fetch verified email of the logged-in user from DB
+        // ✅ Fetch verified email of the logged-in user
         String loggedInEmail = userService.getEmailByUsername(username);
         System.out.println("📧 Verified email found: " + loggedInEmail);
 
         if (role.equalsIgnoreCase("ADMIN")) {
-            // ✅ Start Stock Alert Scheduler for Admin
-            new Thread(() -> {
-                StockAlertService alertService = new StockAlertService();
-                ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-                scheduler.scheduleAtFixedRate(alertService::checkStockAlerts, 0, 1, TimeUnit.MINUTES);
-                System.out.println("🕒 Stock alert scheduler started...");
-            }).start();
+            // ✅ Start Stock Alert Scheduler for this specific admin
+            StockAlertService alertService = new StockAlertService();
+            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+            scheduler.scheduleAtFixedRate(() -> alertService.checkStockAlerts(username), 0, 1, TimeUnit.MINUTES);
+            System.out.println("🕒 Stock alert scheduler started for admin: " + username);
 
             // ✅ Then open admin menu
-            adminMenu(manager, sc, loggedInEmail);
+            adminMenu(manager, sc, loggedInEmail, scheduler);
         } else {
             userMenu(manager, sc);
         }
     }
 
     // ✅ Admin Menu - uses loggedInEmail for report sending
-    private static void adminMenu(InventoryManager manager, Scanner sc, String loggedInEmail) {
+    private static void adminMenu(InventoryManager manager, Scanner sc, String loggedInEmail, ScheduledExecutorService scheduler) {
         boolean running = true;
         while (running) {
             System.out.println("\n🧑‍💼===== ADMIN MENU =====");
@@ -169,6 +168,8 @@ public class Main {
                     case 9 -> {
                         System.out.println("\n🔓 Logging out... Returning to main menu.");
                         running = false;
+                        scheduler.shutdown(); // ✅ Stop the scheduler when admin logs out
+                        System.out.println("🛑 Stock alert scheduler stopped.");
                     }
                     default -> System.out.println("⚠️ Invalid choice! Try again.");
                 }

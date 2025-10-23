@@ -8,19 +8,34 @@ public class product {
     private String category;
     private int threshold;
 
+    public product() {}
 
-    public product() {
-     }
-
-    public product(int id, String name, int quantity, double price ,String category) {
+    // Updated constructor with threshold
+    public product(int id, String name, int quantity, double price, String category, int threshold) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
         this.price = price;
         this.category = category;
+        this.threshold = threshold;
     }
+
+    // Existing constructor (for backward compatibility)
+    public product(int id, String name, int quantity, double price, String category) {
+        this(id, name, quantity, price, category, 0);
+    }
+
     public double stockValue() {
         return quantity * price;
+    }
+
+    // Getters and Setters
+    public int getThreshold() {
+        return threshold;
+    }
+
+    public void setThreshold(int threshold) {
+        this.threshold = threshold;
     }
 
     public String getName() {
@@ -64,16 +79,14 @@ public class product {
     }
 
     public void display() {
-        System.out.println("+----+----------------------+----------------------+----------+----------+");
-        System.out.println("| ID | Name                 | Category             | Quantity |  Price   |");
-        System.out.println("+----+----------------------+----------------------+----------+----------+");
-
+        System.out.println("+----+----------------------+----------------------+----------+----------+-----------+");
+        System.out.println("| ID | Name                 | Category             | Quantity |  Price   | Threshold |");
+        System.out.println("+----+----------------------+----------------------+----------+----------+-----------+");
         System.out.printf(
-                "| %-2d | %-20s | %-20s | %-8d | %-8.2f |\n",
-                id, name, category, quantity, price
+                "| %-2d | %-20s | %-20s | %-8d | %-8.2f | %-9d |\n",
+                id, name, category, quantity, price, threshold
         );
-
-        System.out.println("+----+----------------------+----------------------+----------+----------+");
+        System.out.println("+----+----------------------+----------------------+----------+----------+-----------+");
     }
 
     @Override
@@ -84,8 +97,7 @@ public class product {
                 ", quantity=" + quantity +
                 ", price=" + price +
                 ", category='" + category + '\'' +
+                ", threshold=" + threshold +
                 '}';
     }
-
-
 }
