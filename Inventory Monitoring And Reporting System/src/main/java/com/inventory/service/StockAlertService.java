@@ -10,12 +10,13 @@ import java.util.List;
 public class StockAlertService {
 
     private final EmailService emailService = new EmailService();
+    private List<String> lastAlertedProducts = new ArrayList<>();
 
-    // ✅ Modified to accept admin username
     public void checkStockAlerts(String adminUsername) {
         List<String> lowStockProducts = getLowStockProducts();
 
-        if (!lowStockProducts.isEmpty()) {
+        if (!lowStockProducts.isEmpty() && !lowStockProducts.equals(lastAlertedProducts)) {
+
             String subject = "⚠️ Low Stock Alert: Action Needed!";
             StringBuilder message = new StringBuilder();
             message.append("Dear Admin,\n\n");
@@ -28,22 +29,25 @@ public class StockAlertService {
             message.append("\nPlease restock them soon to avoid shortages.\n\n");
             message.append("~ Inventory Management System");
 
-            // ✅ Fetch email of the current admin
             String adminEmail = getAdminEmail(adminUsername);
 
             if (adminEmail != null) {
                 EmailService.sendReport(adminEmail, subject, message.toString(), null);
-                // 🧹 Removed extra print — EmailService already prints success message
+                lastAlertedProducts = new ArrayList<>(lowStockProducts); // ✅ Update last alerted list
             } else {
                 System.out.println("⚠️ No verified admin found for username: " + adminUsername);
             }
 
+        } else if (lowStockProducts.isEmpty()) {
+
+            lastAlertedProducts.clear();
+            System.out.println("\n✅ All stock levels are sufficient.");
         } else {
-            System.out.println("✅ All stock levels are sufficient.");
+
+            System.out.println("📧 Mail already sent for these low-stock products. No new email needed.");
         }
     }
 
-    // ✅ Fetch email for a specific verified admin
     private String getAdminEmail(String username) {
         String query = "SELECT email FROM users WHERE username = ? AND role = 'ADMIN' AND is_verified = 1";
         try (Connection con = dbConnection.getConnection();
@@ -63,7 +67,6 @@ public class StockAlertService {
         return null;
     }
 
-    // ✅ Fetch products that are below threshold
     private List<String> getLowStockProducts() {
         List<String> products = new ArrayList<>();
         String query = "SELECT name, quantity, threshold FROM products WHERE quantity < threshold";
