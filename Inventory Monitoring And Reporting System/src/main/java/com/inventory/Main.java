@@ -162,13 +162,13 @@ public class Main {
                     case 3 -> manager.updateProduct();
                     case 4 -> manager.displayAll();
                     case 5 -> manager.searchProduct();
-                    case 6 -> manager.generateReport(loggedInEmail); // ✅ Email sent to this admin
+                    case 6 -> manager.generateReport(loggedInEmail);
                     case 7 -> manager.displayPaginated();
                     case 8 -> manager.searchProductByPriceRange();
                     case 9 -> {
                         System.out.println("\n🔓 Logging out... Returning to main menu.");
                         running = false;
-                        scheduler.shutdown(); // ✅ Stop the scheduler when admin logs out
+                        scheduler.shutdown();
                         System.out.println("🛑 Stock alert scheduler stopped.");
                     }
                     default -> System.out.println("⚠️ Invalid choice! Try again.");

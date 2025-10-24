@@ -31,9 +31,6 @@ public class InventoryManager {
 
             product p = new product(id, name, qty, price, category);
             dao.addProduct(p);
-
-            System.out.println("\n✅ Product added successfully!");
-            System.out.println("--------------------------------------------------");
         } catch (NumberFormatException e) {
             System.out.println("⚠️ Invalid input. Please enter correct numbers.");
         }
@@ -47,8 +44,7 @@ public class InventoryManager {
             int id = Integer.parseInt(sc.nextLine());
 
             dao.removeProduct(id);
-            System.out.println("\n✅ Product removed successfully!");
-            System.out.println("--------------------------------------------------");
+
         } catch (NumberFormatException e) {
             System.out.println("⚠️ Invalid input. Please enter a valid ID.");
         } catch (ProductNotFoundException e) {
@@ -68,8 +64,7 @@ public class InventoryManager {
             double price = Double.parseDouble(sc.nextLine());
 
             dao.updateProduct(id, qty, price);
-            System.out.println("\n✅ Product updated successfully!");
-            System.out.println("--------------------------------------------------");
+
         } catch (NumberFormatException e) {
             System.out.println("⚠️ Invalid input. Please enter correct numbers.");
         } catch (ProductNotFoundException e) {
@@ -225,7 +220,6 @@ public class InventoryManager {
                         "Hello Admin,\n\nPlease find the attached inventory report.\n\nRegards,\nInventory System",
                         filePath
                 );
-                System.out.println("✅ Report emailed successfully to " + loggedInEmail + "!");
             } catch (Exception e) {
                 System.out.println("❌ Failed to send email: " + e.getMessage());
             }
