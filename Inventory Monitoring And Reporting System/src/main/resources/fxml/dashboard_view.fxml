@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" spacing="20">
+    <padding>
+        <Insets top="30" right="30" bottom="30" left="30"/>
+    </padding>
+    
+    <Label text="📊 Dashboard Overview" styleClass="section-title"/>
+    <Separator/>
+    
+    <!-- Statistics Cards -->
+    <GridPane hgap="20" vgap="20">
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS" minWidth="200"/>
+            <ColumnConstraints hgrow="ALWAYS" minWidth="200"/>
+            <ColumnConstraints hgrow="ALWAYS" minWidth="200"/>
+            <ColumnConstraints hgrow="ALWAYS" minWidth="200"/>
+        </columnConstraints>
+        
+        <!-- Total Products Card -->
+        <VBox styleClass="stat-card" GridPane.columnIndex="0">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            <Label text="Total Products" styleClass="stat-label"/>
+            <Label fx:id="lblTotalProducts" text="0" styleClass="stat-value"/>
+        </VBox>
+        
+        <!-- Low Stock Card -->
+        <VBox styleClass="stat-card alert" GridPane.columnIndex="1">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            <Label text="Low Stock Items" styleClass="stat-label"/>
+            <Label fx:id="lblLowStock" text="0" styleClass="stat-value"/>
+        </VBox>
+        
+        <!-- Total Value Card -->
+        <VBox styleClass="stat-card" GridPane.columnIndex="2">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            <Label text="Total Stock Value" styleClass="stat-label"/>
+            <Label fx:id="lblTotalValue" text="₹0.00" styleClass="stat-value"/>
+        </VBox>
+        
+        <!-- Last Report Card -->
+        <VBox styleClass="stat-card" GridPane.columnIndex="3">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            <Label text="Last Report Sent" styleClass="stat-label"/>
+            <Label fx:id="lblLastReport" text="Never" styleClass="stat-value-small"/>
+        </VBox>
+    </GridPane>
+    
+    <!-- Low Stock Alert List -->
+    <VBox spacing="10">
+        <Label text="⚠️ Low Stock Alerts" styleClass="section-subtitle"/>
+        <ListView fx:id="lowStockList" prefHeight="200" styleClass="alert-list"/>
+    </VBox>
+    
+    <!-- Database Connection Status -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label fx:id="lblDbStatus" text="Checking database connection..." styleClass="status-text"/>
+    </HBox>
+    
+</VBox>
+

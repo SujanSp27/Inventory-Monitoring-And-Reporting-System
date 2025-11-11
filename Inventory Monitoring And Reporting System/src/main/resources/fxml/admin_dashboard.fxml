@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.inventory.controller.AdminController"
+            stylesheets="@../css/style.css">
+
+    <top>
+        <ToolBar styleClass="top-bar">
+            <Label text="🧑‍💼 Admin Panel" styleClass="title-label"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Add" onAction="#onAdd" styleClass="btn-main"/>
+            <Button text="Update" onAction="#onUpdate" styleClass="btn-secondary"/>
+            <Button text="Delete" onAction="#onDelete" styleClass="btn-danger"/>
+            <Button text="Search" onAction="#onSearch" styleClass="btn-main"/>
+            <Button text="Report" onAction="#onGenerateReport" styleClass="btn-secondary"/>
+            <Button text="Low Stock Analyzer" onAction="#onAnalyze" styleClass="btn-warning"/>
+            <Button text="Logout" onAction="#onLogout" styleClass="btn-exit"/>
+        </ToolBar>
+    </top>
+
+    <center>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <HBox spacing="10">
+                <Label text="🔍 Search:"/>
+                <TextField fx:id="txtSearch" promptText="Search by name/category" HBox.hgrow="ALWAYS"/>
+            </HBox>
+
+            <TableView fx:id="tableView">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
+                    <TableColumn fx:id="colName" text="Name" prefWidth="150"/>
+                    <TableColumn fx:id="colCategory" text="Category" prefWidth="120"/>
+                    <TableColumn fx:id="colQuantity" text="Qty" prefWidth="80"/>
+                    <TableColumn fx:id="colPrice" text="Price" prefWidth="80"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER_LEFT">
+            <padding>
+                <Insets top="8" right="10" bottom="8" left="10"/>
+            </padding>
+            <Label fx:id="lblStatus" text="Ready." styleClass="status-bar"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

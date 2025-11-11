@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.inventory.controller.DashboardController"
+            stylesheets="@../css/modern-style.css">
+    
+    <left>
+        <!-- Sidebar Navigation -->
+        <VBox styleClass="sidebar" prefWidth="250" spacing="10">
+            <padding>
+                <Insets top="20" right="15" bottom="20" left="15"/>
+            </padding>
+            
+            <!-- Logo/Title -->
+            <Label text="📦 Inventory System" styleClass="sidebar-title"/>
+            <Separator/>
+            
+            <!-- Navigation Buttons -->
+            <Button text="📊 Dashboard" onAction="#showDashboard" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="📦 Products" onAction="#showProducts" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="📈 Reports" onAction="#showReports" styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="⚙️ Settings" onAction="#showSettings" styleClass="nav-button" maxWidth="Infinity"/>
+            
+            <Region VBox.vgrow="ALWAYS"/>
+            
+            <!-- User Info & Logout -->
+            <Separator/>
+            <Label fx:id="lblUserInfo" styleClass="user-info"/>
+            <Button text="🚪 Logout" onAction="#onLogout" styleClass="btn-logout" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+    
+    <!-- Main Content Area -->
+    <center>
+        <StackPane fx:id="contentPane">
+            <!-- Dashboard content will be loaded here -->
+            <VBox spacing="20" alignment="CENTER">
+                <padding>
+                    <Insets top="40" right="40" bottom="40" left="40"/>
+                </padding>
+                <Label text="Welcome to Inventory Management System" styleClass="welcome-title"/>
+                <Label text="Select a section from the sidebar to begin" styleClass="welcome-subtitle"/>
+            </VBox>
+        </StackPane>
+    </center>
+    
+</BorderPane>
+

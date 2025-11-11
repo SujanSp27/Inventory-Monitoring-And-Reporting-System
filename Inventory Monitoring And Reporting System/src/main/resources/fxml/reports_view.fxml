@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" spacing="20">
+    <padding>
+        <Insets top="30" right="30" bottom="30" left="30"/>
+    </padding>
+    
+    <Label text="📈 Reports & Email" styleClass="section-title"/>
+    <Separator/>
+    
+    <!-- Report Generation Section -->
+    <VBox spacing="15" styleClass="card">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+        <Label text="Generate Report" styleClass="section-subtitle"/>
+        
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Button text="📄 Generate CSV Report" onAction="#onGenerateCSVReport" styleClass="btn-primary"/>
+            <Button text="📊 View Report Preview" onAction="#onPreviewReport" styleClass="btn-secondary"/>
+        </HBox>
+        
+        <Label fx:id="lblReportStatus" text="" styleClass="status-text"/>
+    </VBox>
+    
+    <!-- Email Section -->
+    <VBox spacing="15" styleClass="card">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+        <Label text="Send Report via Email" styleClass="section-subtitle"/>
+        
+        <GridPane hgap="15" vgap="15">
+            <columnConstraints>
+                <ColumnConstraints minWidth="120"/>
+                <ColumnConstraints hgrow="ALWAYS" minWidth="300"/>
+            </columnConstraints>
+            
+            <Label text="Recipient Email:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField fx:id="txtRecipientEmail" promptText="Enter recipient email" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            
+            <Label text="Subject:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <TextField fx:id="txtEmailSubject" text="📦 Inventory Report" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            
+            <Label text="Message:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <TextArea fx:id="txtEmailMessage" prefRowCount="4" promptText="Enter email message..." GridPane.columnIndex="1" GridPane.rowIndex="2" wrapText="true"/>
+            
+            <Label text="Attachment:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                <TextField fx:id="txtAttachmentPath" promptText="Report file path (auto-filled)" editable="false" HBox.hgrow="ALWAYS"/>
+                <Button text="📎 Browse" onAction="#onBrowseAttachment" styleClass="btn-secondary"/>
+            </HBox>
+        </GridPane>
+        
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Button text="📧 Send Report Email" onAction="#onSendReportEmail" styleClass="btn-primary"/>
+            <Button text="🧪 Test Email" onAction="#onTestEmail" styleClass="btn-secondary"/>
+        </HBox>
+        
+        <Label fx:id="lblEmailStatus" text="" styleClass="status-text"/>
+    </VBox>
+    
+    <!-- Report History -->
+    <VBox spacing="10">
+        <Label text="📜 Recent Reports" styleClass="section-subtitle"/>
+        <ListView fx:id="reportHistoryList" prefHeight="150" styleClass="history-list"/>
+    </VBox>
+    
+</VBox>
+

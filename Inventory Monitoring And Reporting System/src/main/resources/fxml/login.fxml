@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.inventory.controller.LoginController"
+      alignment="CENTER" spacing="10" style="-fx-background-color: linear-gradient(to bottom right, #2c3e50, #3498db);">
+    <padding>
+        <Insets top="50" right="50" bottom="50" left="50"/>
+    </padding>
+
+    <Label text="🔐 Login to Inventory System" style="-fx-font-size: 20px; -fx-text-fill: white;"/>
+    <TextField fx:id="txtEmail" promptText="Email"/>
+    <PasswordField fx:id="txtPassword" promptText="Password"/>
+
+    <HBox spacing="10">
+        <Button text="Login" onAction="#onLogin" style="-fx-background-color:#27ae60; -fx-text-fill:white;"/>
+        <Button text="Register" onAction="#goRegister" style="-fx-background-color:#2980b9; -fx-text-fill:white;"/>
+    </HBox>
+
+    <Label fx:id="lblMessage" textFill="white"/>
+</VBox>

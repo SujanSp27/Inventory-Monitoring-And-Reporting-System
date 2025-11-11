@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.inventory.controller.RegisterController"
+      alignment="CENTER" spacing="10" style="-fx-background-color: linear-gradient(to bottom right, #16a085, #1abc9c);">
+    <padding><Insets top="50" right="50" bottom="50" left="50"/></padding>
+
+    <Label text="📝 Register New Account" style="-fx-font-size: 20px; -fx-text-fill: white;"/>
+    <TextField fx:id="txtName" promptText="Full Name"/>
+    <TextField fx:id="txtEmail" promptText="Email"/>
+    <PasswordField fx:id="txtPassword" promptText="Password"/>
+
+    <Button text="Register" onAction="#onRegister" style="-fx-background-color:#27ae60; -fx-text-fill:white;"/>
+    <Button text="Back to Login" onAction="#goLogin" style="-fx-background-color:#2980b9; -fx-text-fill:white;"/>
+
+    <Label fx:id="lblMessage" textFill="white"/>
+</VBox>

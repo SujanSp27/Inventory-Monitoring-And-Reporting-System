@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" spacing="15">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+    
+    <Label text="📦 Products Management" styleClass="section-title"/>
+    <Separator/>
+    
+    <!-- Toolbar -->
+    <VBox spacing="10">
+        <!-- Main Action Buttons -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Button text="➕ Add Product" onAction="#onAddProduct" styleClass="btn-primary"/>
+            <Button text="✏️ Edit Product" onAction="#onEditProduct" styleClass="btn-secondary"/>
+            <Button text="🗑️ Delete Product" onAction="#onDeleteProduct" styleClass="btn-danger"/>
+            <Button text="👁️ View Details" onAction="#onViewProductDetails" styleClass="btn-secondary"/>
+            <Button text="🔄 Refresh" onAction="#onRefresh" styleClass="btn-secondary"/>
+            <Region HBox.hgrow="ALWAYS"/>
+        </HBox>
+        
+        <!-- Search and Filter Section -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="🔍 Quick Search:"/>
+            <TextField fx:id="txtSearch" promptText="Search by name, category, or ID..." prefWidth="200" onKeyReleased="#onSearch"/>
+            <Button text="🔍 Search" onAction="#onSearch" styleClass="btn-secondary"/>
+            <Separator orientation="VERTICAL" prefHeight="30"/>
+            <Label text="Filters:"/>
+            <ComboBox fx:id="cmbCategoryFilter" promptText="Filter by Category" prefWidth="150" onAction="#onCategoryFilter"/>
+            <Button text="🔎 Search by ID" onAction="#onSearchById" styleClass="btn-secondary"/>
+            <Button text="💰 Price Range" onAction="#onSearchByPriceRange" styleClass="btn-secondary"/>
+            <Button text="📄 Pagination" onAction="#onShowPagination" styleClass="btn-secondary"/>
+            <Button text="❌ Clear Filters" onAction="#onClearFilters" styleClass="btn-secondary"/>
+        </HBox>
+    </VBox>
+    
+    <!-- Products Table -->
+    <TableView fx:id="productsTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colId" text="ID" prefWidth="60" sortable="true"/>
+            <TableColumn fx:id="colName" text="Product Name" prefWidth="200" sortable="true"/>
+            <TableColumn fx:id="colCategory" text="Category" prefWidth="150" sortable="true"/>
+            <TableColumn fx:id="colQuantity" text="Quantity" prefWidth="100" sortable="true"/>
+            <TableColumn fx:id="colPrice" text="Price" prefWidth="100" sortable="true"/>
+            <TableColumn fx:id="colThreshold" text="Threshold" prefWidth="100" sortable="true"/>
+            <TableColumn fx:id="colStockValue" text="Stock Value" prefWidth="120" sortable="true"/>
+        </columns>
+    </TableView>
+    
+    <!-- Status Bar -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label fx:id="lblStatus" text="Ready" styleClass="status-text"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="lblRecordCount" text="0 products" styleClass="status-text"/>
+    </HBox>
+    
+</VBox>
+

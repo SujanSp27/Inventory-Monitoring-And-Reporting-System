@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.inventory.InventoryController"
+            stylesheets="@../css/style.css">
+
+    <top>
+        <ToolBar styleClass="top-bar">
+            <Label text="📦 Inventory Dashboard" styleClass="title-label"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Add Product" onAction="#onAdd" styleClass="btn-main"/>
+            <Button text="Update" onAction="#onUpdate" styleClass="btn-secondary"/>
+            <Button text="Delete" onAction="#onRemove" styleClass="btn-danger"/>
+            <Button text="Exit" onAction="#onExit" styleClass="btn-exit"/>
+        </ToolBar>
+    </top>
+
+    <center>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <HBox spacing="8">
+                <padding>
+                    <Insets top="5" right="5" bottom="5" left="5"/>
+                </padding>
+                <Label text="🔍 Search:"/>
+                <TextField fx:id="txtSearch" promptText="Type to filter products..." HBox.hgrow="ALWAYS"/>
+            </HBox>
+
+            <TableView fx:id="tableView">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
+                    <TableColumn fx:id="colName" text="Name" prefWidth="150"/>
+                    <TableColumn fx:id="colCategory" text="Category" prefWidth="120"/>
+                    <TableColumn fx:id="colQuantity" text="Quantity" prefWidth="100"/>
+                    <TableColumn fx:id="colPrice" text="Price" prefWidth="100"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+
+    <bottom>
+        <Label fx:id="lblStatus" styleClass="status-bar">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+        </Label>
+    </bottom>
+
+</BorderPane>

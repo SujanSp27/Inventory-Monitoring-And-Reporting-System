@@ -2,6 +2,7 @@ package com.inventory.DataAccessObject;
 
 import com.inventory.model.product;
 import com.inventory.util.dbConnection;
+import com.inventory.util.ProductDAOHelper;
 import com.inventory.exception.ProductNotFoundException;
 
 import java.sql.*;
@@ -12,7 +13,7 @@ public class ProductDAO {
 
     // ✅ Add Product
     public void addProduct(product product) {
-        String sql = "INSERT INTO products (id, name, category, quantity, price) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO products (id, name, category, quantity, price, threshold) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -21,6 +22,7 @@ public class ProductDAO {
             stmt.setString(3, product.getCategory());
             stmt.setInt(4, product.getQuantity());
             stmt.setDouble(5, product.getPrice());
+            stmt.setInt(6, product.getThreshold() > 0 ? product.getThreshold() : 10); // Default threshold: 10
 
             int rows = stmt.executeUpdate();
             if (rows > 0) {
@@ -28,7 +30,24 @@ public class ProductDAO {
             }
 
         } catch (SQLException e) {
-            System.out.println("❌ Error adding product: " + e.getMessage());
+            // If threshold column doesn't exist, try without it
+            if (e.getMessage().contains("threshold")) {
+                try (Connection conn = dbConnection.getConnection();
+                     PreparedStatement stmt = conn.prepareStatement(
+                         "INSERT INTO products (id, name, category, quantity, price) VALUES (?, ?, ?, ?, ?)")) {
+                    stmt.setInt(1, product.getId());
+                    stmt.setString(2, product.getName());
+                    stmt.setString(3, product.getCategory());
+                    stmt.setInt(4, product.getQuantity());
+                    stmt.setDouble(5, product.getPrice());
+                    stmt.executeUpdate();
+                    System.out.println("✅ Product added successfully: " + product.getName());
+                } catch (SQLException e2) {
+                    System.out.println("❌ Error adding product: " + e2.getMessage());
+                }
+            } else {
+                System.out.println("❌ Error adding product: " + e.getMessage());
+            }
         }
     }
 
@@ -87,12 +106,14 @@ public class ProductDAO {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
+                int threshold = ProductDAOHelper.getThreshold(rs, 10);
                 return new product(
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getInt("quantity"),
                         rs.getDouble("price"),
-                        rs.getString("category")
+                        rs.getString("category"),
+                        threshold
                 );
             } else {
                 throw new ProductNotFoundException("Product with name '" + name + "' not found.");
@@ -114,12 +135,14 @@ public class ProductDAO {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
+                int threshold = ProductDAOHelper.getThreshold(rs, 10);
                 return new product(
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getInt("quantity"),
                         rs.getDouble("price"),
-                        rs.getString("category")
+                        rs.getString("category"),
+                        threshold
                 );
             } else {
                 throw new ProductNotFoundException("Product with ID " + id + " not found.");
@@ -141,12 +164,14 @@ public class ProductDAO {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
+                int threshold = ProductDAOHelper.getThreshold(rs, 10);
                 list.add(new product(
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getInt("quantity"),
                         rs.getDouble("price"),
-                        rs.getString("category")
+                        rs.getString("category"),
+                        threshold
                 ));
             }
 
@@ -168,12 +193,14 @@ public class ProductDAO {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
+                int threshold = ProductDAOHelper.getThreshold(rs, 10);
                 list.add(new product(
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getInt("quantity"),
                         rs.getDouble("price"),
-                        rs.getString("category")
+                        rs.getString("category"),
+                        threshold
                 ));
             }
 
@@ -201,12 +228,14 @@ public class ProductDAO {
 
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
+                int threshold = ProductDAOHelper.getThreshold(rs, 10);
                 list.add(new product(
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getInt("quantity"),
                         rs.getDouble("price"),
-                        rs.getString("category")
+                        rs.getString("category"),
+                        threshold
                 ));
             }
 
@@ -229,12 +258,14 @@ public class ProductDAO {
 
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
+                int threshold = ProductDAOHelper.getThreshold(rs, 10);
                 list.add(new product(
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getInt("quantity"),
                         rs.getDouble("price"),
-                        rs.getString("category")
+                        rs.getString("category"),
+                        threshold
                 ));
             }
 

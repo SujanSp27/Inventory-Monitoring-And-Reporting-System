@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" spacing="20">
+    <padding>
+        <Insets top="30" right="30" bottom="30" left="30"/>
+    </padding>
+    
+    <Label text="⚙️ Settings" styleClass="section-title"/>
+    <Separator/>
+    
+    <!-- Email Settings -->
+    <VBox spacing="15" styleClass="card">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+        <Label text="Email Configuration" styleClass="section-subtitle"/>
+        <Label text="Note: Email credentials are stored in environment variables (MAIL_USER, MAIL_PASS)" styleClass="info-text"/>
+        
+        <GridPane hgap="15" vgap="15">
+            <columnConstraints>
+                <ColumnConstraints minWidth="150"/>
+                <ColumnConstraints hgrow="ALWAYS" minWidth="300"/>
+            </columnConstraints>
+            
+            <Label text="SMTP Host:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField fx:id="txtSmtpHost" text="smtp.gmail.com" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            
+            <Label text="SMTP Port:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <TextField fx:id="txtSmtpPort" text="587" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            
+            <Label text="From Email:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <Label fx:id="lblFromEmail" text="(from MAIL_USER env var)" styleClass="info-text" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            
+            <Label text="Email Status:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <Label fx:id="lblEmailConfigStatus" text="Checking..." styleClass="status-text" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+        </GridPane>
+        
+        <HBox spacing="10">
+            <Button text="✅ Test Email Configuration" onAction="#onTestEmailConfig" styleClass="btn-primary"/>
+        </HBox>
+    </VBox>
+    
+    <!-- Database Settings -->
+    <VBox spacing="15" styleClass="card">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+        <Label text="Database Configuration" styleClass="section-subtitle"/>
+        
+        <GridPane hgap="15" vgap="15">
+            <columnConstraints>
+                <ColumnConstraints minWidth="150"/>
+                <ColumnConstraints hgrow="ALWAYS" minWidth="300"/>
+            </columnConstraints>
+            
+            <Label text="Database URL:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField fx:id="txtDbUrl" text="jdbc:mysql://localhost:3306/inventoryDB" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            
+            <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <TextField fx:id="txtDbUsername" text="root" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            
+            <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <PasswordField fx:id="txtDbPassword" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            
+            <Label text="Connection Status:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <Label fx:id="lblDbConfigStatus" text="Checking..." styleClass="status-text" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+        </GridPane>
+        
+        <HBox spacing="10">
+            <Button text="✅ Test Database Connection" onAction="#onTestDbConnection" styleClass="btn-primary"/>
+            <Button text="💾 Save Database Settings" onAction="#onSaveDbSettings" styleClass="btn-secondary"/>
+        </HBox>
+    </VBox>
+    
+</VBox>
+

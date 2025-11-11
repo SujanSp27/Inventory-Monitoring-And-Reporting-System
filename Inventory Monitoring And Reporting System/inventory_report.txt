@@ -1,0 +1,15 @@
+? Inventory Report
+
+ID: 101 | airpods         | electronics | Qty:  30 | Price: ?1000.00 | Value: ?30000.00
+ID: 102 | pencil          | stationary | Qty:  50 | Price: ?10.00 | Value: ?500.00
+ID: 110 | iphone 15       | electronics | Qty:  10 | Price: ?60000.00 | Value: ?600000.00
+ID: 150 | keybroad        | electronics | Qty:  20 | Price: ?1000.00 | Value: ?20000.00
+ID: 201 | ipad            | electronics | Qty:  10 | Price: ?45000.00 | Value: ?450000.00
+ID: 202 | tv              | electronics | Qty:  20 | Price: ?20000.00 | Value: ?400000.00
+ID: 207 | mouse           | electronics | Qty:  15 | Price: ?999.00 | Value: ?14985.00
+ID: 210 | smart watch     | electronics | Qty:  11 | Price: ?1000.00 | Value: ?11000.00
+ID: 666 | charger         | electronics | Qty:  10 | Price: ?499.00 | Value: ?4990.00
+
+----------------------------------
+Total Stock Value: ?1531475.00
+Low Stock Items: 0
