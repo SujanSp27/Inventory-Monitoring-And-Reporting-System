@@ -85,17 +85,48 @@ public class AdminController {
     private HBox createTopBar(Stage stage) {
         HBox topBar = new HBox(20);
         topBar.setPadding(new Insets(15, 25, 15, 25));
-        topBar.setStyle("-fx-background-color: linear-gradient(to right, #667eea 0%, #764ba2 100%); " +
-                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 15, 0.3, 0, 5);");
+        topBar.setStyle("-fx-background-color: linear-gradient(to right, #0a0e27 0%, #1a1a2e 100%); " +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,212,255,0.3), 15, 0.3, 0, 5); " +
+                        "-fx-border-color: #00d4ff; " +
+                        "-fx-border-width: 0 0 2 0; " +
+                        "-fx-focus-color: transparent; " +
+                        "-fx-faint-focus-color: transparent; " +
+                        "-fx-background-insets: 0; " +  // Remove any dotted borders
+                        "-fx-border-insets: 0;");
         topBar.setAlignment(Pos.CENTER_LEFT);
+        
+        // Add entrance animation with slide effect
+        topBar.setOpacity(0);
+        topBar.setTranslateY(-20);
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(600), topBar);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        
+        TranslateTransition slideIn = new TranslateTransition(Duration.millis(600), topBar);
+        slideIn.setFromY(-20);
+        slideIn.setToY(0);
+        
+        ParallelTransition entrance = new ParallelTransition(fadeIn, slideIn);
+        entrance.play();
         
         Label title = new Label("⚡ Inventory Management System - Admin Panel");
         title.setFont(Font.font("System", FontWeight.BOLD, 22));
-        title.setTextFill(Color.WHITE);
+        title.setTextFill(Color.web("#00d4ff"));
         
         // Add glow effect
-        Glow glow = new Glow(0.3);
+        DropShadow glow = new DropShadow();
+        glow.setColor(Color.web("#00d4ff", 0.8));
+        glow.setRadius(10);
         title.setEffect(glow);
+        
+        // Add pulsing animation to title
+        Timeline titlePulse = new Timeline(
+            new KeyFrame(Duration.ZERO, new KeyValue(title.opacityProperty(), 1)),
+            new KeyFrame(Duration.millis(1000), new KeyValue(title.opacityProperty(), 0.8)),
+            new KeyFrame(Duration.millis(2000), new KeyValue(title.opacityProperty(), 1))
+        );
+        titlePulse.setCycleCount(Timeline.INDEFINITE);
+        titlePulse.play();
         
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -104,86 +135,141 @@ public class AdminController {
         HBox userBadge = new HBox(8);
         userBadge.setAlignment(Pos.CENTER);
         userBadge.setPadding(new Insets(8, 15, 8, 15));
-        userBadge.setStyle("-fx-background-color: rgba(255, 255, 255, 0.15); " +
+        userBadge.setStyle("-fx-background-color: rgba(0, 212, 255, 0.15); " +
                           "-fx-background-radius: 20; " +
-                          "-fx-cursor: hand;");
+                          "-fx-border-color: #00d4ff; " +
+                          "-fx-border-width: 1; " +
+                          "-fx-border-radius: 20; " +
+                          "-fx-cursor: hand; " +
+                          "-fx-focus-color: transparent; " +
+                          "-fx-faint-focus-color: transparent; " +
+                          "-fx-background-insets: 0; " +  // Remove any dotted borders
+                          "-fx-border-insets: 0;");
         
+        // Enhanced user icon with better visibility
         Label userIcon = new Label("👤");
-        userIcon.setFont(Font.font("System", 16));
+        userIcon.setFont(Font.font("System", FontWeight.BOLD, 20));
+        userIcon.setTextFill(Color.web("#00d4ff")); // Neon blue for better visibility
+        
+        // Add glow effect to icon
+        DropShadow iconGlow = new DropShadow();
+        iconGlow.setColor(Color.web("#00d4ff", 0.8));
+        iconGlow.setRadius(8);
+        userIcon.setEffect(iconGlow);
         
         Label userLabel = new Label(username);
         userLabel.setFont(Font.font("System", FontWeight.SEMI_BOLD, 14));
-        userLabel.setTextFill(Color.WHITE);
+        userLabel.setTextFill(Color.web("#00d4ff"));
         
         userBadge.getChildren().addAll(userIcon, userLabel);
         
-        // Hover animation for user badge
+        // Simplified hover effect without animations
         userBadge.setOnMouseEntered(e -> {
-            userBadge.setStyle("-fx-background-color: rgba(255, 255, 255, 0.25); " +
+            userBadge.setStyle("-fx-background-color: rgba(0, 212, 255, 0.3); " +
                               "-fx-background-radius: 20; " +
+                              "-fx-border-color: #00d4ff; " +
+                              "-fx-border-width: 2; " +
+                              "-fx-border-radius: 20; " +
                               "-fx-cursor: hand; " +
-                              "-fx-effect: dropshadow(gaussian, rgba(255,255,255,0.4), 10, 0.5, 0, 0);");
-            ScaleTransition st = new ScaleTransition(Duration.millis(150), userBadge);
-            st.setToX(1.08);
-            st.setToY(1.08);
-            st.play();
+                              "-fx-effect: dropshadow(gaussian, rgba(0,212,255,0.8), 20, 0.5, 0, 0); " +
+                              "-fx-focus-color: transparent; " +
+                              "-fx-faint-focus-color: transparent;");
         });
         
         userBadge.setOnMouseExited(e -> {
-            userBadge.setStyle("-fx-background-color: rgba(255, 255, 255, 0.15); " +
+            userBadge.setStyle("-fx-background-color: rgba(0, 212, 255, 0.15); " +
                               "-fx-background-radius: 20; " +
-                              "-fx-cursor: hand;");
-            ScaleTransition st = new ScaleTransition(Duration.millis(150), userBadge);
-            st.setToX(1.0);
-            st.setToY(1.0);
-            st.play();
+                              "-fx-border-color: #00d4ff; " +
+                              "-fx-border-width: 1; " +
+                              "-fx-border-radius: 20; " +
+                              "-fx-cursor: hand; " +
+                              "-fx-focus-color: transparent; " +
+                              "-fx-faint-focus-color: transparent; " +
+                              "-fx-background-insets: 0; " +  // Remove any dotted borders
+                              "-fx-border-insets: 0;");
         });
         
-        // Show user info on click
+        // Simplified click effect without animations
         userBadge.setOnMouseClicked(e -> {
             showUserInfo();
         });
         
         Button logoutBtn = new Button("🚪 Logout");
-        logoutBtn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; " +
-                          "-fx-font-weight: bold; -fx-background-radius: 8; " +
-                          "-fx-padding: 10 20; -fx-cursor: hand;");
+        logoutBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #e74c3c, #c0392b); " +
+                          "-fx-text-fill: white; " +
+                          "-fx-font-weight: bold; " +
+                          "-fx-background-radius: 8; " +
+                          "-fx-padding: 10 20; " +
+                          "-fx-cursor: hand; " +
+                          "-fx-focus-color: transparent; " +
+                          "-fx-faint-focus-color: transparent;");
         
-        // Hover animation for logout button
+        // Enhanced hover animation for logout button
         logoutBtn.setOnMouseEntered(e -> {
-            logoutBtn.setStyle("-fx-background-color: #c0392b; -fx-text-fill: white; " +
-                              "-fx-font-weight: bold; -fx-background-radius: 8; " +
-                              "-fx-padding: 10 20; -fx-cursor: hand; " +
-                              "-fx-effect: dropshadow(gaussian, rgba(231,76,60,0.6), 10, 0.5, 0, 0);");
-            ScaleTransition st = new ScaleTransition(Duration.millis(100), logoutBtn);
-            st.setToX(1.05);
-            st.setToY(1.05);
-            st.play();
+            logoutBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #ff6b6b, #ff4757); " +
+                              "-fx-text-fill: white; " +
+                              "-fx-font-weight: bold; " +
+                              "-fx-background-radius: 8; " +
+                              "-fx-padding: 10 20; " +
+                              "-fx-cursor: hand; " +
+                              "-fx-effect: dropshadow(gaussian, rgba(231,76,60,0.8), 15, 0.5, 0, 0); " +
+                              "-fx-focus-color: transparent; " +
+                              "-fx-faint-focus-color: transparent;");
+            
+            // Scale and glow animation
+            ScaleTransition scale = new ScaleTransition(Duration.millis(150), logoutBtn);
+            scale.setToX(1.05);
+            scale.setToY(1.05);
+            
+            // Pulse effect
+            Timeline pulse = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(logoutBtn.opacityProperty(), 1)),
+                new KeyFrame(Duration.millis(200), new KeyValue(logoutBtn.opacityProperty(), 0.8)),
+                new KeyFrame(Duration.millis(400), new KeyValue(logoutBtn.opacityProperty(), 1))
+            );
+            
+            ParallelTransition parallel = new ParallelTransition(scale, pulse);
+            parallel.play();
         });
         
         logoutBtn.setOnMouseExited(e -> {
-            logoutBtn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; " +
-                              "-fx-font-weight: bold; -fx-background-radius: 8; " +
-                              "-fx-padding: 10 20; -fx-cursor: hand;");
-            ScaleTransition st = new ScaleTransition(Duration.millis(100), logoutBtn);
-            st.setToX(1.0);
-            st.setToY(1.0);
-            st.play();
+            logoutBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #e74c3c, #c0392b); " +
+                              "-fx-text-fill: white; " +
+                              "-fx-font-weight: bold; " +
+                              "-fx-background-radius: 8; " +
+                              "-fx-padding: 10 20; " +
+                              "-fx-cursor: hand; " +
+                              "-fx-focus-color: transparent; " +
+                              "-fx-faint-focus-color: transparent;");
+            
+            ScaleTransition scale = new ScaleTransition(Duration.millis(150), logoutBtn);
+            scale.setToX(1.0);
+            scale.setToY(1.0);
+            scale.play();
         });
         
         logoutBtn.setOnAction(e -> {
             if (scheduler != null) {
                 scheduler.shutdown();
             }
-            // Fade out animation before logout
+            // Enhanced fade out animation before logout
             FadeTransition fadeOut = new FadeTransition(Duration.millis(500), stage.getScene().getRoot());
             fadeOut.setFromValue(1.0);
             fadeOut.setToValue(0.0);
-            fadeOut.setOnFinished(event -> {
+            
+            // Add scale transition for smooth exit
+            ScaleTransition scaleOut = new ScaleTransition(Duration.millis(500), stage.getScene().getRoot());
+            scaleOut.setFromX(1.0);
+            scaleOut.setFromY(1.0);
+            scaleOut.setToX(0.95);
+            scaleOut.setToY(0.95);
+            
+            ParallelTransition exitTransition = new ParallelTransition(fadeOut, scaleOut);
+            exitTransition.setOnFinished(event -> {
                 LoginController loginController = new LoginController();
                 loginController.showLoginScene(stage);
             });
-            fadeOut.play();
+            exitTransition.play();
         });
         
         topBar.getChildren().addAll(title, spacer, userBadge, logoutBtn);
@@ -196,8 +282,27 @@ public class AdminController {
         sidebar.setPrefWidth(220);
         sidebar.setStyle("-fx-background-color: rgba(26, 26, 46, 0.95); " +
                         "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 20, 0.4, 5, 0); " +
-                        "-fx-border-color: rgba(102, 126, 234, 0.3); " +
-                        "-fx-border-width: 0 2 0 0;");
+                        "-fx-border-color: rgba(0, 212, 255, 0.3); " +
+                        "-fx-border-width: 0 2 0 0; " +
+                        "-fx-focus-color: transparent; " +
+                        "-fx-faint-focus-color: transparent; " +
+                        "-fx-background-insets: 0; " +  // Remove any dotted borders
+                        "-fx-border-insets: 0;");
+        
+        // Add entrance animation with slide and fade effect
+        sidebar.setOpacity(0);
+        sidebar.setTranslateX(-220);
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(500), sidebar);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        
+        TranslateTransition slideInSidebar = new TranslateTransition(Duration.millis(500), sidebar);
+        slideInSidebar.setFromX(-220);
+        slideInSidebar.setToX(0);
+        
+        ParallelTransition entrance = new ParallelTransition(fadeIn, slideInSidebar);
+        entrance.setDelay(Duration.millis(300)); // Slight delay for better visual effect
+        entrance.play();
         
         Label menuTitle = new Label("✨ ADMIN MENU");
         menuTitle.setFont(Font.font("System", FontWeight.BOLD, 14));
@@ -209,6 +314,15 @@ public class AdminController {
         titleGlow.setColor(Color.web("#00d4ff", 0.6));
         titleGlow.setRadius(8);
         menuTitle.setEffect(titleGlow);
+        
+        // Add pulsing animation to menu title
+        Timeline titlePulse = new Timeline(
+            new KeyFrame(Duration.ZERO, new KeyValue(menuTitle.opacityProperty(), 1)),
+            new KeyFrame(Duration.millis(1500), new KeyValue(menuTitle.opacityProperty(), 0.7)),
+            new KeyFrame(Duration.millis(3000), new KeyValue(menuTitle.opacityProperty(), 1))
+        );
+        titlePulse.setCycleCount(Timeline.INDEFINITE);
+        titlePulse.play();
         
         Button dashboardBtn = createMenuButton("📊 Dashboard");
         Button addProductBtn = createMenuButton("➕ Add Product");
@@ -229,9 +343,11 @@ public class AdminController {
                                      updateProductBtn, searchBtn, reportBtn, refreshBtn);
         
         // Slide in animation for sidebar
+        sidebar.setTranslateX(-220);
         TranslateTransition slideIn = new TranslateTransition(Duration.millis(600), sidebar);
         slideIn.setFromX(-220);
         slideIn.setToX(0);
+        slideIn.setInterpolator(javafx.animation.Interpolator.EASE_OUT);
         slideIn.play();
         
         return sidebar;
@@ -246,20 +362,43 @@ public class AdminController {
                     "-fx-text-fill: #e0e6ed; " +
                     "-fx-font-size: 14; " +
                     "-fx-cursor: hand; " +
-                    "-fx-background-radius: 8;");
+                    "-fx-background-radius: 8; " +
+                    "-fx-focus-color: transparent; " +
+                    "-fx-faint-focus-color: transparent; " +
+                    "-fx-background-insets: 0; " +  // Remove any dotted borders
+                    "-fx-border-insets: 0;");
         
-        // Hover animation
+        // Enhanced hover animation with multiple effects
         btn.setOnMouseEntered(e -> {
-            btn.setStyle("-fx-background-color: rgba(102, 126, 234, 0.3); " +
-                        "-fx-text-fill: #00d4ff; " +
+            btn.setStyle("-fx-background-color: rgba(0, 212, 255, 0.3); " +
+                        "-fx-text-fill: #ffffff; " +
                         "-fx-font-size: 14; " +
                         "-fx-cursor: hand; " +
                         "-fx-background-radius: 8; " +
-                        "-fx-effect: dropshadow(gaussian, rgba(0,212,255,0.4), 10, 0.5, 0, 0);");
+                        "-fx-focus-color: transparent; " +
+                        "-fx-faint-focus-color: transparent; " +
+                        "-fx-background-insets: 0; " +
+                        "-fx-border-insets: 0;");
             
+            // Create a more complex animation sequence
+            ScaleTransition scale = new ScaleTransition(Duration.millis(150), btn);
+            scale.setToX(1.02);
+            scale.setToY(1.02);
+            
+            // Add glow effect
+            DropShadow glow = new DropShadow();
+            glow.setColor(Color.web("#00d4ff", 0.6));
+            glow.setRadius(10);
+            glow.setOffsetX(0);
+            glow.setOffsetY(0);
+            btn.setEffect(glow);
+            
+            // Translate transition for slide effect
             TranslateTransition slide = new TranslateTransition(Duration.millis(150), btn);
-            slide.setToX(8);
-            slide.play();
+            slide.setToX(5);
+            
+            ParallelTransition parallel = new ParallelTransition(scale, slide);
+            parallel.play();
         });
         
         btn.setOnMouseExited(e -> {
@@ -267,11 +406,41 @@ public class AdminController {
                         "-fx-text-fill: #e0e6ed; " +
                         "-fx-font-size: 14; " +
                         "-fx-cursor: hand; " +
-                        "-fx-background-radius: 8;");
+                        "-fx-background-radius: 8; " +
+                        "-fx-focus-color: transparent; " +
+                        "-fx-faint-focus-color: transparent; " +
+                        "-fx-background-insets: 0; " +
+                        "-fx-border-insets: 0;");
             
+            // Remove glow effect
+            btn.setEffect(null);
+            
+            // Return to normal
+            ScaleTransition scale = new ScaleTransition(Duration.millis(150), btn);
+            scale.setToX(1.0);
+            scale.setToY(1.0);
+            
+            // Return to original position
             TranslateTransition slide = new TranslateTransition(Duration.millis(150), btn);
             slide.setToX(0);
-            slide.play();
+            
+            ParallelTransition parallel = new ParallelTransition(scale, slide);
+            parallel.play();
+        });
+        
+        // Add click animation
+        btn.setOnMousePressed(e -> {
+            ScaleTransition scale = new ScaleTransition(Duration.millis(100), btn);
+            scale.setToX(0.98);
+            scale.setToY(0.98);
+            scale.play();
+        });
+        
+        btn.setOnMouseReleased(e -> {
+            ScaleTransition scale = new ScaleTransition(Duration.millis(100), btn);
+            scale.setToX(1.02);
+            scale.setToY(1.02);
+            scale.play();
         });
         
         return btn;

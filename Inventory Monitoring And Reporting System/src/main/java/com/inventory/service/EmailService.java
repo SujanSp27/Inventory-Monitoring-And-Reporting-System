@@ -12,9 +12,16 @@ public class EmailService {
         final String fromEmail = System.getenv("MAIL_USER");
         final String password = System.getenv("MAIL_PASS");
 
-        // ✅ Step 1: Validate credentials
-        if (fromEmail == null || password == null) {
-            System.out.println("❌ Email credentials (MAIL_USER, MAIL_PASS) are not set in environment variables!");
+        // ✅ Step 1: Validate credentials with better error handling
+        if (fromEmail == null || fromEmail.trim().isEmpty()) {
+            System.out.println("❌ MAIL_USER environment variable is not set!");
+            System.out.println("💡 Please set MAIL_USER environment variable with your email address");
+            return;
+        }
+        
+        if (password == null || password.trim().isEmpty()) {
+            System.out.println("❌ MAIL_PASS environment variable is not set!");
+            System.out.println("💡 Please set MAIL_PASS environment variable with your email password or app password");
             return;
         }
 
@@ -87,8 +94,16 @@ public class EmailService {
         final String fromEmail = System.getenv("MAIL_USER");
         final String password = System.getenv("MAIL_PASS");
 
-        if (fromEmail == null || password == null) {
-            System.out.println("❌ Email credentials (MAIL_USER, MAIL_PASS) are not set in environment variables!");
+        // ✅ Step 1: Validate credentials with better error handling
+        if (fromEmail == null || fromEmail.trim().isEmpty()) {
+            System.out.println("❌ MAIL_USER environment variable is not set!");
+            System.out.println("💡 Please set MAIL_USER environment variable with your email address");
+            return;
+        }
+        
+        if (password == null || password.trim().isEmpty()) {
+            System.out.println("❌ MAIL_PASS environment variable is not set!");
+            System.out.println("💡 Please set MAIL_PASS environment variable with your email password or app password");
             return;
         }
 
