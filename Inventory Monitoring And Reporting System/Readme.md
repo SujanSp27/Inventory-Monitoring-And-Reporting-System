@@ -261,3 +261,14 @@ Configure SMTP settings in `EmailService.java` for:
 For issues or questions, check the database connection and ensure all services are running properly.
 
 Enjoy using the Inventory Management System! 🚀
+
+❤️ Contributing
+
+Contributions are welcome!
+
+Fork the repo
+Create a branch: feature/my-feature
+Commit changes
+Push and submit a PR
+
+⭐ Don’t forget to star the repository if this project helped you!
